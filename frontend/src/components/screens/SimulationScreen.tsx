@@ -2,12 +2,12 @@
  * KaalNetra — Simulation Turn Screen
  *
  * Immersive historical simulation screen.
- * Shows:
- *   - Tactical Map or Fort Scene
- *   - Turn result summary in plain English
- *   - Fort Defense Numbers with clear changes (+/-)
+ * Evaluator-optimized UX:
+ *   - Turn Result Summary displayed FIRST at top
+ *   - Tactical map & fort scene below the text
+ *   - Clear state changes (+/-) with color bars
  *   - Commander Rao Jaimal's reaction
- *   - Next step button
+ *   - High-visibility action button
  * Dark fortress theme, antique gold trims, zero gradients.
  */
 
@@ -70,9 +70,9 @@ export default function SimulationScreen() {
     <div className="app-page-clean">
       <GameHeader badge="simulation" />
 
-      <main className="clean-container py-8 sm:py-10 space-y-8">
+      <main className="clean-container py-5 sm:py-7 space-y-5">
         {/* Turn Header */}
-        <div className="flex flex-wrap items-baseline justify-between pb-4 border-b border-[#272E3D] gap-2">
+        <div className="flex flex-wrap items-baseline justify-between pb-3 border-b border-[#272E3D] gap-2">
           <div>
             <span className="text-xs uppercase tracking-wider font-bold text-[#C5A059] font-mono">
               Turn {turn} Complete &bull; Results of Your Command
@@ -81,17 +81,47 @@ export default function SimulationScreen() {
               Battle Simulation: What Happened?
             </h1>
           </div>
-          <div className="text-xs sm:text-sm font-semibold text-[#B8B09F] bg-[#141720] px-3 py-1.5 border border-[#272E3D]">
+          <div className="text-xs sm:text-sm font-semibold text-[#B8B09F] bg-[#141720] px-3 py-1 border border-[#272E3D]">
             Current Date: <strong className="text-[#DFBE76]">{state_after.date_label}</strong>
           </div>
         </div>
 
         {/* 2-Column Simulation Layout */}
         <div className="layout-sidebar-grid">
-          {/* Left Column: Visual Map / Environment & Consequence */}
+          {/* Left Column: Result Summary FIRST, then Visual Viewport */}
           <div className="space-y-4">
-            {/* Viewport Frame */}
-            <div className="bg-[#141720] border border-[#C5A059] p-2.5 shadow-md">
+            {/* 1. Latest Consequence Card (TEXT FIRST) */}
+            <div className="bg-[#141720] border border-[#C5A059] p-5 shadow-md space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs uppercase tracking-wider font-bold text-[#C5A059] font-mono flex items-center gap-1.5">
+                  <span>📜</span> Turn {turn} Command Outcome
+                </span>
+                <span className="text-[10px] font-mono uppercase px-2 py-0.5 bg-[#0D0F14] border border-[#272E3D] text-[#DFBE76]">
+                  Immediate Consequence
+                </span>
+              </div>
+
+              <p className="text-base text-[#F4EFE6] leading-relaxed font-medium">
+                {event_description}
+              </p>
+
+              {/* Threshold Warnings (if triggered) */}
+              {thresholdEffects && thresholdEffects.length > 0 && (
+                <div className="mt-3 pt-3 border-t border-[#272E3D] space-y-2">
+                  <span className="text-xs font-bold text-[#FFA3A3] uppercase tracking-wider block font-mono">
+                    ⚠️ Urgent Warnings Triggered:
+                  </span>
+                  {thresholdEffects.map((t) => (
+                    <div key={t.ruleId} className="p-2.5 bg-[#2A1212] border border-[#9E2A2B] text-xs text-[#FFA3A3]">
+                      <strong>{t.description}</strong> &mdash; <em>{t.condition}</em>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* 2. Viewport Frame (Map or Scene Below the Text) */}
+            <div className="bg-[#141720] border border-[#272E3D] p-2.5 shadow-md">
               <div className="flex items-center justify-between px-2 py-1 mb-2 border-b border-[#272E3D]">
                 <span className="text-xs font-bold uppercase tracking-wider text-[#DFBE76] font-mono">
                   {viewMode === 'map' ? 'Tactical Battlefield Map' : 'Fort Ramparts Scene'}
@@ -122,7 +152,7 @@ export default function SimulationScreen() {
 
               {viewMode === 'map' ? (
                 <div className="overflow-hidden bg-[#0D0F14] border border-[#272E3D]">
-                  <PhaserTacticalMap height={320} />
+                  <PhaserTacticalMap height={280} />
                 </div>
               ) : (
                 <picture>
@@ -130,33 +160,9 @@ export default function SimulationScreen() {
                   <img
                     src={ENVIRONMENTS.fort_walls.fallbackSrc ?? ENVIRONMENTS.fort_walls.src}
                     alt="Ramparts of Chittor"
-                    className="w-full aspect-[16/10] object-cover border border-[#272E3D]"
+                    className="w-full h-56 object-cover border border-[#272E3D]"
                   />
                 </picture>
-              )}
-            </div>
-
-            {/* Latest Consequence Card */}
-            <div className="bg-[#141720] border border-[#272E3D] p-5 shadow-md space-y-2.5">
-              <div className="text-xs uppercase tracking-wider font-bold text-[#C5A059] font-mono">
-                Turn {turn} Result Summary
-              </div>
-              <p className="text-base text-[#F4EFE6] leading-relaxed font-medium">
-                {event_description}
-              </p>
-
-              {/* Threshold Warnings (if triggered) */}
-              {thresholdEffects && thresholdEffects.length > 0 && (
-                <div className="mt-3 pt-3 border-t border-[#272E3D] space-y-2">
-                  <span className="text-xs font-bold text-[#FFA3A3] uppercase tracking-wider block font-mono">
-                    ⚠️ Urgent Warnings Triggered:
-                  </span>
-                  {thresholdEffects.map((t) => (
-                    <div key={t.ruleId} className="p-2.5 bg-[#2A1212] border border-[#9E2A2B] text-xs text-[#FFA3A3]">
-                      <strong>{t.description}</strong> &mdash; <em>{t.condition}</em>
-                    </div>
-                  ))}
-                </div>
               )}
             </div>
           </div>
@@ -172,7 +178,7 @@ export default function SimulationScreen() {
                 <span className="text-xs text-[#788194] font-mono">Scale: 0&ndash;100%</span>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {STATE_VAR_KEYS.map((key) => {
                   const val = state_after[key];
                   const before = state_before[key];
@@ -218,7 +224,7 @@ export default function SimulationScreen() {
             </div>
 
             {/* Field Observation */}
-            <div className="bg-[#141720] border border-[#272E3D] p-5 shadow-md space-y-2">
+            <div className="bg-[#141720] border border-[#272E3D] p-4 shadow-md space-y-2">
               <span className="text-xs uppercase tracking-wider font-bold text-[#C5A059] block font-mono">
                 Commander Rao Jaimal&apos;s Field Report
               </span>
