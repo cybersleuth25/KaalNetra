@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kaalnetra.local/schema/scenario.schema.json",
+  "title": "KaalNetra Scenario",
+  "type": "object",
+  "required": ["id", "title", "period", "historical_context", "starting_state", "decision_points", "canonical_timeline", "evidence"],
+  "properties": {
+    "id": {"type": "string"},
+    "title": {"type": "string"},
+    "period": {"type": "string"},
+    "historical_context": {"type": "array", "items": {"type": "string"}},
+    "starting_state": {
+      "type": "object",
+      "required": ["food", "water", "defenders", "morale", "fort_integrity", "siege_progress"],
+      "properties": {
+        "food": {"type": "number", "minimum": 0, "maximum": 100},
+        "water": {"type": "number", "minimum": 0, "maximum": 100},
+        "defenders": {"type": "number", "minimum": 0, "maximum": 100},
+        "morale": {"type": "number", "minimum": 0, "maximum": 100},
+        "fort_integrity": {"type": "number", "minimum": 0, "maximum": 100},
+        "siege_progress": {"type": "number", "minimum": 0, "maximum": 100}
+      }
+    },
+    "decision_points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "prompt", "options"],
+        "properties": {
+          "id": {"type": "string"},
+          "prompt": {"type": "string"},
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "title", "description", "delta"],
+              "properties": {
+                "id": {"type": "string"},
+                "title": {"type": "string"},
+                "description": {"type": "string"},
+                "delta": {"type": "object", "additionalProperties": {"type": "number"}}
+              }
+            }
+          }
+        }
+      }
+    },
+    "canonical_timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "date_label", "title", "description", "evidence_level"],
+        "properties": {
+          "id": {"type": "string"},
+          "date_label": {"type": "string"},
+          "title": {"type": "string"},
+          "description": {"type": "string"},
+          "evidence_level": {"enum": ["CANONICAL", "CONTESTED"]},
+          "source_ids": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "claim", "source", "type", "evidence_level"],
+        "properties": {
+          "id": {"type": "string"},
+          "claim": {"type": "string"},
+          "source": {"type": "string"},
+          "type": {"type": "string"},
+          "evidence_level": {"enum": ["CANONICAL", "CONTESTED", "SIMULATION", "FICTIONAL_COMPOSITE"]},
+          "note": {"type": "string"}
+        }
+      }
+    }
+  }
+}

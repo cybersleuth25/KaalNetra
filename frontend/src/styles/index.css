@@ -1,0 +1,529 @@
+@import "tailwindcss";
+@import "./gameplay.css";
+
+/*
+ * KaalNetra Design System
+ * From UI_UX_PRD.md:
+ *   - Parchment / warm stone neutrals
+ *   - Deep maroon for Mewar defensive context
+ *   - Emerald / dark green for Mughal context
+ *   - Gold as accent
+ *   - Serif display font for historical headings
+ *   - Highly legible sans-serif for data and controls
+ */
+
+/* ------------------------------------------------------------------ */
+/* CSS Custom Properties — Design Tokens                              */
+/* ------------------------------------------------------------------ */
+
+:root {
+  /* Parchment / stone neutrals */
+  --color-parchment-50: #faf6f0;
+  --color-parchment-100: #f3ece0;
+  --color-parchment-200: #e6d9c3;
+  --color-parchment-300: #d4c09e;
+  --color-parchment-400: #bfa57a;
+  --color-stone-500: #7a6c5d;
+  --color-stone-700: #4a3f35;
+  --color-stone-900: #2a2420;
+
+  /* Mewar maroon */
+  --color-maroon-400: #a3344a;
+  --color-maroon-500: #8b1a2b;
+  --color-maroon-600: #721524;
+  --color-maroon-700: #58101c;
+  --color-maroon-800: #3e0c14;
+
+  /* Mughal emerald */
+  --color-emerald-400: #2d9b6e;
+  --color-emerald-500: #1a7a52;
+  --color-emerald-600: #14613f;
+  --color-emerald-700: #0e4a30;
+
+  /* Gold accent */
+  --color-gold-300: #f5d778;
+  --color-gold-400: #e8c84a;
+  --color-gold-500: #d4a72c;
+  --color-gold-600: #b8901e;
+
+  /* Typography */
+  --font-display: 'Cinzel', 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+  --font-body: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  /* Spacing scale */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Base Reset                                                         */
+/* ------------------------------------------------------------------ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-parchment-100);
+  background: var(--color-stone-900);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ------------------------------------------------------------------ */
+/* Typography                                                         */
+/* ------------------------------------------------------------------ */
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* ------------------------------------------------------------------ */
+/* App Root                                                           */
+/* ------------------------------------------------------------------ */
+
+.app-root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ------------------------------------------------------------------ */
+/* Home Screen                                                        */
+/* ------------------------------------------------------------------ */
+
+.home-screen {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(139, 26, 43, 0.3) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 70%, rgba(26, 122, 82, 0.15) 0%, transparent 50%),
+    linear-gradient(180deg, var(--color-stone-900) 0%, #1a1510 100%);
+  overflow: hidden;
+}
+
+.home-overlay {
+  position: absolute;
+  inset: 0;
+  background: url('/assets/environments/chittor_overview.webp') center/cover no-repeat;
+  opacity: 0.15;
+  filter: blur(2px);
+  z-index: 0;
+}
+
+.home-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-lg);
+  padding: var(--space-2xl);
+  max-width: 48rem;
+}
+
+.home-title {
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.home-title-kaal {
+  color: var(--color-gold-400);
+  text-shadow:
+    0 0 40px rgba(232, 200, 74, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.home-title-netra {
+  color: var(--color-parchment-100);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.home-subtitle {
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 2vw, 1.2rem);
+  color: var(--color-parchment-300);
+  line-height: 1.6;
+  font-weight: 400;
+  max-width: 36rem;
+}
+
+.home-tagline {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-gold-400);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.home-cta {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-stone-900);
+  background: linear-gradient(135deg, var(--color-gold-400) 0%, var(--color-gold-500) 100%);
+  border: 2px solid var(--color-gold-500);
+  padding: 0.9rem 2.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow:
+    0 4px 20px rgba(232, 200, 74, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.home-cta:hover {
+  background: linear-gradient(135deg, var(--color-gold-300) 0%, var(--color-gold-400) 100%);
+  box-shadow:
+    0 6px 30px rgba(232, 200, 74, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.home-cta:active {
+  transform: translateY(0);
+  box-shadow:
+    0 2px 10px rgba(232, 200, 74, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.home-attribution {
+  font-size: 0.75rem;
+  color: var(--color-stone-500);
+  letter-spacing: 0.08em;
+  margin-top: var(--space-xl);
+}
+
+/* ------------------------------------------------------------------ */
+/* Scenario Debug / Preview Screen                                    */
+/* ------------------------------------------------------------------ */
+
+.debug-screen {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--color-stone-900) 0%, #1a1510 100%);
+  padding: var(--space-xl) var(--space-md);
+}
+
+.debug-container {
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.debug-header {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+}
+
+.debug-header h1 {
+  font-size: 2rem;
+  color: var(--color-gold-400);
+}
+
+.debug-subtitle {
+  color: var(--color-stone-500);
+  font-size: 0.9rem;
+  margin-top: var(--space-xs);
+}
+
+/* Sections */
+.debug-section {
+  background: rgba(74, 63, 53, 0.3);
+  border: 1px solid rgba(191, 165, 122, 0.15);
+  border-radius: 8px;
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.debug-section h2 {
+  font-size: 1.25rem;
+  color: var(--color-gold-400);
+  margin-bottom: var(--space-md);
+  border-bottom: 1px solid rgba(191, 165, 122, 0.15);
+  padding-bottom: var(--space-sm);
+}
+
+.debug-section h3 {
+  font-size: 1.05rem;
+  color: var(--color-parchment-200);
+  margin-bottom: var(--space-sm);
+}
+
+/* Tables */
+.debug-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin-top: var(--space-sm);
+}
+
+.debug-table th {
+  background: rgba(42, 36, 32, 0.6);
+  color: var(--color-gold-400);
+  text-align: left;
+  padding: var(--space-sm) var(--space-md);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.debug-table td {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid rgba(74, 63, 53, 0.3);
+  color: var(--color-parchment-200);
+}
+
+.debug-table code {
+  background: rgba(42, 36, 32, 0.6);
+  padding: 0.1em 0.4em;
+  border-radius: 3px;
+  font-size: 0.8rem;
+  color: var(--color-gold-300);
+}
+
+/* Badges */
+.debug-badge {
+  display: inline-block;
+  padding: 0.2em 0.6em;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.debug-badge-ok {
+  background: rgba(45, 155, 110, 0.2);
+  color: var(--color-emerald-400);
+  border: 1px solid rgba(45, 155, 110, 0.3);
+}
+
+.debug-badge-err {
+  background: rgba(163, 52, 74, 0.2);
+  color: var(--color-maroon-400);
+  border: 1px solid rgba(163, 52, 74, 0.3);
+}
+
+.debug-badge-canon {
+  background: rgba(232, 200, 74, 0.15);
+  color: var(--color-gold-400);
+  border: 1px solid rgba(232, 200, 74, 0.2);
+}
+
+.debug-badge-sim {
+  background: rgba(122, 108, 93, 0.2);
+  color: var(--color-stone-500);
+  border: 1px solid rgba(122, 108, 93, 0.3);
+}
+
+/* Errors & Warnings */
+.debug-error-list {
+  background: rgba(163, 52, 74, 0.1);
+  border: 1px solid rgba(163, 52, 74, 0.25);
+  border-radius: 6px;
+  padding: var(--space-md);
+  margin-top: var(--space-sm);
+}
+
+.debug-error-list h4 {
+  color: var(--color-maroon-400);
+  font-size: 0.9rem;
+  margin-bottom: var(--space-sm);
+}
+
+.debug-error-list li {
+  font-size: 0.8rem;
+  color: var(--color-parchment-200);
+  margin-bottom: var(--space-xs);
+  list-style: none;
+  padding-left: var(--space-sm);
+}
+
+.debug-error-list code {
+  color: var(--color-maroon-400);
+  font-size: 0.75rem;
+}
+
+.debug-warning-list {
+  background: rgba(212, 167, 44, 0.08);
+  border: 1px solid rgba(212, 167, 44, 0.2);
+  border-radius: 6px;
+  padding: var(--space-md);
+  margin-top: var(--space-sm);
+}
+
+.debug-warning-list h4 {
+  color: var(--color-gold-500);
+  font-size: 0.9rem;
+  margin-bottom: var(--space-sm);
+}
+
+.debug-warning-list li {
+  font-size: 0.8rem;
+  color: var(--color-parchment-300);
+  margin-bottom: var(--space-xs);
+}
+
+/* Cards */
+.debug-card {
+  background: rgba(42, 36, 32, 0.4);
+  border: 1px solid rgba(191, 165, 122, 0.1);
+  border-radius: 6px;
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.debug-card h4 {
+  color: var(--color-parchment-100);
+  font-size: 0.95rem;
+  margin-bottom: var(--space-sm);
+}
+
+.debug-trigger {
+  font-size: 0.8rem;
+  color: var(--color-emerald-400);
+  font-style: italic;
+  margin-bottom: var(--space-sm);
+}
+
+/* Timeline */
+.debug-timeline {
+  border-left: 2px solid var(--color-gold-500);
+  padding-left: var(--space-lg);
+}
+
+.debug-timeline-event {
+  position: relative;
+  margin-bottom: var(--space-lg);
+}
+
+.debug-timeline-event::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--space-lg) - 5px);
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-gold-400);
+  border: 2px solid var(--color-stone-900);
+}
+
+.debug-timeline-date {
+  font-size: 0.75rem;
+  color: var(--color-gold-500);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+.debug-timeline-event h4 {
+  color: var(--color-parchment-100);
+  margin: var(--space-xs) 0;
+}
+
+.debug-timeline-event p {
+  font-size: 0.85rem;
+  color: var(--color-parchment-300);
+  margin-bottom: var(--space-xs);
+}
+
+/* DL */
+.debug-dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-xs) var(--space-md);
+  font-size: 0.9rem;
+}
+
+.debug-dl dt {
+  color: var(--color-stone-500);
+  font-weight: 600;
+}
+
+.debug-dl dd {
+  color: var(--color-parchment-200);
+}
+
+/* OL */
+.debug-ol {
+  padding-left: var(--space-lg);
+  color: var(--color-parchment-200);
+  font-size: 0.9rem;
+}
+
+.debug-ol li {
+  margin-bottom: var(--space-sm);
+  line-height: 1.5;
+}
+
+/* Buttons */
+.debug-btn {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  padding: 0.6rem 1.2rem;
+  border: 1px solid rgba(191, 165, 122, 0.3);
+  background: rgba(74, 63, 53, 0.4);
+  color: var(--color-parchment-200);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.debug-btn:hover {
+  background: rgba(74, 63, 53, 0.6);
+  border-color: var(--color-gold-500);
+  color: var(--color-parchment-100);
+}
+
+.debug-btn-primary {
+  background: linear-gradient(135deg, var(--color-gold-400) 0%, var(--color-gold-500) 100%);
+  color: var(--color-stone-900);
+  border: 1px solid var(--color-gold-500);
+  font-weight: 600;
+}
+
+.debug-btn-primary:hover {
+  background: linear-gradient(135deg, var(--color-gold-300) 0%, var(--color-gold-400) 100%);
+  color: var(--color-stone-900);
+}
+
+/* Nav */
+.debug-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid rgba(191, 165, 122, 0.15);
+}
+
+/* Invalid test results */
+.debug-invalid-results {
+  margin-top: var(--space-md);
+}

@@ -1,0 +1,389 @@
+{
+  "id": "chittor_1567",
+  "title": "The Siege of Chittor",
+  "period": "1567–1568",
+  "location": "Chittor, Mewar",
+
+  "historical_context": [
+    "Chittor was the principal stronghold of Mewar and came under siege by Mughal forces led by Akbar in late 1567.",
+    "The defence of the fort is associated with commanders including Jaimal Rathore and Patta Chundawat after Udai Singh II withdrew from the final defence.",
+    "Mughal siege operations included covered approaches (sabats) and mining/siege engineering.",
+    "The fort fell to Mughal forces in February 1568 after a prolonged siege."
+  ],
+
+  "actors": [
+    {
+      "id": "jaimal",
+      "name": "Rao Jaimal Rathore",
+      "role": "commander",
+      "historical": true,
+      "faction": "Mewar",
+      "description": "Documented historical figure, principal defender/commander of Chittor.",
+      "source_ids": ["akbarnama", "badayuni", "chandra"]
+    },
+    {
+      "id": "patta",
+      "name": "Patta Chundawat",
+      "role": "commander",
+      "historical": true,
+      "faction": "Mewar",
+      "description": "Documented historical figure, principal defender/commander of Chittor.",
+      "source_ids": ["akbarnama", "chandra"]
+    },
+    {
+      "id": "udai_singh",
+      "name": "Rana Udai Singh II",
+      "role": "ruler",
+      "historical": true,
+      "faction": "Mewar",
+      "description": "Documented ruler of Mewar during the siege. Withdrew from Chittor before/during the siege.",
+      "source_ids": ["chandra", "somani"]
+    },
+    {
+      "id": "akbar",
+      "name": "Emperor Akbar",
+      "role": "opponent",
+      "historical": true,
+      "faction": "Mughal",
+      "description": "Documented Mughal emperor and leader of the campaign against Chittor.",
+      "source_ids": ["akbarnama", "badayuni", "chandra"]
+    },
+    {
+      "id": "mirza_yusuf",
+      "name": "Mirza Yusuf",
+      "role": "siege_officer",
+      "historical": false,
+      "faction": "Mughal",
+      "description": "Fictional composite siege officer representing siege-engineering personnel; not a historical individual.",
+      "source_ids": []
+    },
+    {
+      "id": "resource_steward",
+      "name": "Mewar Resource Steward",
+      "role": "civilian",
+      "historical": false,
+      "faction": "Mewar",
+      "description": "Fictional composite civilian/logistics perspective; not a historical individual.",
+      "source_ids": []
+    }
+  ],
+
+  "state_variables": [
+    {
+      "id": "food",
+      "label": "Food Stores",
+      "polarity": "higher_better",
+      "icon": "grain",
+      "description": "Garrison food supplies. Depletion causes morale and manpower loss."
+    },
+    {
+      "id": "water",
+      "label": "Water Supply",
+      "polarity": "higher_better",
+      "icon": "droplet",
+      "description": "Fortress water reserves. Critical for survival under siege."
+    },
+    {
+      "id": "defenders",
+      "label": "Defenders",
+      "polarity": "higher_better",
+      "icon": "shield",
+      "description": "Normalized manpower index of the garrison. Loss weakens all defences."
+    },
+    {
+      "id": "morale",
+      "label": "Morale",
+      "polarity": "higher_better",
+      "icon": "flag",
+      "description": "Garrison and civilian morale. Affected by resources, losses, and decisions."
+    },
+    {
+      "id": "fort_integrity",
+      "label": "Fort Integrity",
+      "polarity": "higher_better",
+      "icon": "castle",
+      "description": "Structural condition of the fort's defences. Degraded by siege engineering."
+    },
+    {
+      "id": "siege_progress",
+      "label": "Siege Progress",
+      "polarity": "lower_better",
+      "icon": "crosshair",
+      "description": "Mughal siege advancement. Higher values are worse for defenders."
+    }
+  ],
+
+  "starting_state": {
+    "food": 78,
+    "water": 72,
+    "defenders": 84,
+    "morale": 82,
+    "fort_integrity": 94,
+    "siege_progress": 18
+  },
+
+  "decision_points": [
+    {
+      "id": "decision_1",
+      "prompt": "The siege works are advancing. What should the defenders prioritize?",
+      "options": [
+        {
+          "id": "decision_1_a",
+          "title": "Concentrate Defenders",
+          "description": "Commit more defenders to the most threatened approaches.",
+          "delta": {
+            "fort_integrity": 4,
+            "siege_progress": -8,
+            "food": -3,
+            "defenders": -2,
+            "morale": 2
+          }
+        },
+        {
+          "id": "decision_1_b",
+          "title": "Reinforce Sectors",
+          "description": "Strengthen threatened positions while preserving more of the garrison.",
+          "delta": {
+            "fort_integrity": 6,
+            "siege_progress": -3,
+            "defenders": -1,
+            "morale": 1
+          }
+        },
+        {
+          "id": "decision_1_c",
+          "title": "Limited Sortie",
+          "description": "Attempt a focused counteraction against nearby siege activity.",
+          "delta": {
+            "siege_progress": -10,
+            "defenders": -7,
+            "morale": 7,
+            "food": -1
+          }
+        },
+        {
+          "id": "decision_1_d",
+          "title": "Conserve Strength",
+          "description": "Accept slower pressure now to preserve the garrison for later turns.",
+          "delta": {
+            "siege_progress": 5,
+            "food": 2,
+            "defenders": 1,
+            "fort_integrity": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "decision_2",
+      "prompt": "A major defensive sector is under severe pressure. How do you respond?",
+      "trigger_condition": "Reach turn 3, or fort_integrity <= 55, or siege_progress >= 60",
+      "options": [
+        {
+          "id": "decision_2_a",
+          "title": "Concentrate at Breach",
+          "description": "Commit remaining strength to the most threatened defensive point.",
+          "delta": {
+            "fort_integrity": 7,
+            "morale": 4,
+            "defenders": -5,
+            "siege_progress": -8
+          }
+        },
+        {
+          "id": "decision_2_b",
+          "title": "Redistribute Defenders",
+          "description": "Spread the remaining force across several critical positions.",
+          "delta": {
+            "fort_integrity": 3,
+            "defenders": -2,
+            "morale": 2,
+            "siege_progress": -5
+          }
+        },
+        {
+          "id": "decision_2_c",
+          "title": "Counterattack Siege Works",
+          "description": "Attempt another direct disruption of the siege operation.",
+          "delta": {
+            "siege_progress": -12,
+            "defenders": -8,
+            "morale": 6,
+            "food": -2
+          }
+        },
+        {
+          "id": "decision_2_d",
+          "title": "Preserve Remaining Strength",
+          "description": "Reduce immediate losses even if the fort's position worsens.",
+          "delta": {
+            "siege_progress": 6,
+            "defenders": 2,
+            "morale": -4,
+            "fort_integrity": -3
+          }
+        }
+      ]
+    }
+  ],
+
+  "canonical_timeline": [
+    {
+      "id": "canon_start",
+      "date_label": "Late 1567",
+      "title": "Mughal siege begins",
+      "description": "Akbar leads the Mughal campaign against Chittor and the fort comes under siege.",
+      "evidence_level": "CANONICAL",
+      "source_ids": ["akbarnama", "chandra", "somani"]
+    },
+    {
+      "id": "canon_siege_works",
+      "date_label": "During the siege",
+      "title": "Siege works advance",
+      "description": "Accounts describe covered approaches and mining/siege engineering used against the fort.",
+      "evidence_level": "CANONICAL",
+      "source_ids": ["akbarnama", "badayuni", "chandra"]
+    },
+    {
+      "id": "canon_jaimal_death",
+      "date_label": "Late February 1568",
+      "title": "Jaimal is killed",
+      "description": "Abu'l Fazl and Badayuni describe Jaimal being shot during the final stage of the siege; the V&A Akbarnama manuscript also depicts this episode.",
+      "evidence_level": "CANONICAL",
+      "source_ids": ["akbarnama", "badayuni", "vaa_akbarnama"]
+    },
+    {
+      "id": "canon_fall",
+      "date_label": "February 1568",
+      "title": "Chittor falls",
+      "description": "The fort is captured by Mughal forces after the prolonged siege.",
+      "evidence_level": "CANONICAL",
+      "source_ids": ["akbarnama", "chandra", "somani"]
+    }
+  ],
+
+  "historical_constraints": [
+    {
+      "id": "constraint_no_relief",
+      "title": "No external relief force",
+      "description": "No documented external Rajput relief force arrived to break the Mughal siege during the period.",
+      "affects": ["defenders"],
+      "source_ids": ["chandra", "somani"]
+    },
+    {
+      "id": "constraint_siege_engineering",
+      "title": "Mughal siege engineering",
+      "description": "Mughal forces used covered approaches (sabats) and mining operations, providing persistent siege pressure.",
+      "affects": ["fort_integrity", "siege_progress"],
+      "source_ids": ["akbarnama", "badayuni"]
+    },
+    {
+      "id": "constraint_limited_water",
+      "title": "Limited water sources",
+      "description": "The fort's water supplies were finite and could not be resupplied during the siege.",
+      "affects": ["water"],
+      "source_ids": ["somani"]
+    },
+    {
+      "id": "constraint_food_stores",
+      "title": "Finite food stores",
+      "description": "The garrison's food reserves depleted over the months-long siege with no resupply route.",
+      "affects": ["food"],
+      "source_ids": ["chandra"]
+    }
+  ],
+
+  "fictional_composites": [
+    {
+      "actor_id": "mirza_yusuf",
+      "rationale": "No single named Mughal siege engineer is identified in the primary sources used by this project. This composite represents the documented Mughal siege-engineering capability.",
+      "represents": "Mughal siege engineering personnel"
+    },
+    {
+      "actor_id": "resource_steward",
+      "rationale": "No single named civilian logistics officer is identified in the sources. This composite represents the documented civilian and logistics perspective within the fort.",
+      "represents": "Civilian/logistics perspective within Chittor"
+    }
+  ],
+
+  "simulation_notes": [
+    {
+      "id": "note_abstraction",
+      "content": "All numerical state values (food, water, defenders, morale, fort_integrity, siege_progress) are gameplay abstractions on a 0–100 scale. They are not historical measurements.",
+      "context": "state_variables"
+    },
+    {
+      "id": "note_deltas",
+      "content": "Choice deltas and passive turn effects are authored counterfactual game mechanics, not claims about exact historical rates or quantities.",
+      "context": "decision_points"
+    },
+    {
+      "id": "note_deterministic",
+      "content": "The simulation is fully deterministic in the MVP: same starting state plus same choices always produces the same outcome. No randomness is used.",
+      "context": "simulation_engine"
+    },
+    {
+      "id": "note_thresholds",
+      "content": "Threshold rules (e.g., food < 30 triggers morale penalty) are gameplay design to create meaningful consequences, not historical claims about specific breakpoints.",
+      "context": "threshold_rules"
+    }
+  ],
+
+  "reflection_prompts": [
+    "Why do you think your outcome diverged from history?",
+    "What trade-off mattered most in your simulation?",
+    "If you could change one decision, which would it be and why?",
+    "What constraint was most difficult to manage?"
+  ],
+
+  "evidence": [
+    {
+      "id": "akbarnama",
+      "claim": "Abu'l Fazl's Akbarnama contains an account of Akbar's siege of Chittor.",
+      "source": "Abu'l Fazl, Akbarnama, Chittor siege account",
+      "type": "Primary/near-contemporary court chronicle",
+      "evidence_level": "CANONICAL",
+      "note": "Use a reliable edition/translation for final in-game citations."
+    },
+    {
+      "id": "badayuni",
+      "claim": "Badayuni's Muntakhab-ut-Tawarikh gives a contrasting/parallel account of the final stage of the siege and Jaimal's death.",
+      "source": "Abdul Qadir Badayuni, Muntakhab-ut-Tawarikh",
+      "type": "Near-contemporary chronicle",
+      "evidence_level": "CANONICAL",
+      "note": "Historical narratives should be attributed where interpretations differ."
+    },
+    {
+      "id": "chandra",
+      "claim": "Modern scholarly synthesis discusses the Chittor campaign and siege as part of Akbar's Mughal expansion.",
+      "source": "Satish Chandra, Medieval India: From Sultanat to the Mughals, Part II",
+      "type": "Scholarly secondary work",
+      "evidence_level": "CANONICAL",
+      "note": "Use the relevant edition/page citation in the final build."
+    },
+    {
+      "id": "somani",
+      "claim": "Modern scholarship on Mewar provides historical context for the Chittor siege.",
+      "source": "R. V. Somani, History of Mewar, from Earliest Times to 1751 A.D.",
+      "type": "Scholarly secondary work",
+      "evidence_level": "CANONICAL",
+      "note": "Use the relevant edition/page citation in the final build."
+    },
+    {
+      "id": "vaa_akbarnama",
+      "claim": "A Victoria and Albert Museum Akbarnama manuscript scene depicts Akbar shooting Jaimal during the siege.",
+      "source": "Victoria and Albert Museum, Akbarnama manuscript record",
+      "type": "Museum/archive record",
+      "evidence_level": "CANONICAL",
+      "note": "The artwork is a later manuscript illustration of the event, not a photograph or eyewitness image."
+    },
+    {
+      "id": "simulation_disclaimer",
+      "claim": "State deltas and player outcomes are counterfactual gameplay mechanics.",
+      "source": "KaalNetra authored simulation model",
+      "type": "Game design specification",
+      "evidence_level": "SIMULATION",
+      "note": "Never present these numerical effects as historical measurements."
+    }
+  ]
+}
