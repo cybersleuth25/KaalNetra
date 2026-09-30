@@ -125,12 +125,12 @@
   "decision_points": [
     {
       "id": "decision_1",
-      "prompt": "The siege works are advancing. What should the defenders prioritize?",
+      "prompt": "The enemy is building giant tunnels toward our gates. What should our defenders do first?",
       "options": [
         {
           "id": "decision_1_a",
-          "title": "Concentrate Defenders",
-          "description": "Commit more defenders to the most threatened approaches.",
+          "title": "Concentrate Defenders (Guard Main Gates)",
+          "description": "Send extra warriors to the front gates where the enemy is attacking hardest.",
           "delta": {
             "fort_integrity": 4,
             "siege_progress": -8,
@@ -141,8 +141,8 @@
         },
         {
           "id": "decision_1_b",
-          "title": "Reinforce Sectors",
-          "description": "Strengthen threatened positions while preserving more of the garrison.",
+          "title": "Reinforce Sectors (Spread Out on Walls)",
+          "description": "Position defenders across all watchtowers so enemy soldiers cannot sneak up.",
           "delta": {
             "fort_integrity": 6,
             "siege_progress": -3,
@@ -152,8 +152,8 @@
         },
         {
           "id": "decision_1_c",
-          "title": "Limited Sortie",
-          "description": "Attempt a focused counteraction against nearby siege activity.",
+          "title": "Limited Sortie (Night Surprise Attack)",
+          "description": "Send a brave strike team outside at midnight to burn the enemy's wooden tunnels.",
           "delta": {
             "siege_progress": -10,
             "defenders": -7,
@@ -163,8 +163,8 @@
         },
         {
           "id": "decision_1_d",
-          "title": "Conserve Strength",
-          "description": "Accept slower pressure now to preserve the garrison for later turns.",
+          "title": "Conserve Strength (Save Soldier Energy)",
+          "description": "Stay safe behind stone walls, rest the fighters, and save supplies for the big battle.",
           "delta": {
             "siege_progress": 5,
             "food": 2,
@@ -176,13 +176,13 @@
     },
     {
       "id": "decision_2",
-      "prompt": "A major defensive sector is under severe pressure. How do you respond?",
+      "prompt": "DISASTER! Gunpowder blew open a huge hole in the wall! How do you defend it?",
       "trigger_condition": "Reach turn 3, or fort_integrity <= 55, or siege_progress >= 60",
       "options": [
         {
           "id": "decision_2_a",
-          "title": "Concentrate at Breach",
-          "description": "Commit remaining strength to the most threatened defensive point.",
+          "title": "Concentrate at Breach (Rush to the Blown Wall)",
+          "description": "Send elite fighters straight into the blast hole to stop enemy troops from pouring in.",
           "delta": {
             "fort_integrity": 7,
             "morale": 4,
@@ -192,8 +192,8 @@
         },
         {
           "id": "decision_2_b",
-          "title": "Redistribute Defenders",
-          "description": "Spread the remaining force across several critical positions.",
+          "title": "Redistribute Defenders (Build Inner Wooden Wall)",
+          "description": "Fall back slightly, build a barricade, and let archers shoot down at the invaders.",
           "delta": {
             "fort_integrity": 3,
             "defenders": -2,
@@ -203,8 +203,8 @@
         },
         {
           "id": "decision_2_c",
-          "title": "Counterattack Siege Works",
-          "description": "Attempt another direct disruption of the siege operation.",
+          "title": "Counterattack Siege Works (Attack Enemy Tunnel)",
+          "description": "Lead a dangerous raid outside straight at the tunnel where enemy miners are digging.",
           "delta": {
             "siege_progress": -12,
             "defenders": -8,
@@ -214,8 +214,8 @@
         },
         {
           "id": "decision_2_d",
-          "title": "Preserve Remaining Strength",
-          "description": "Reduce immediate losses even if the fort's position worsens.",
+          "title": "Preserve Remaining Strength (Fall Back to Citadel)",
+          "description": "Conserve remaining water and troops inside the citadel to survive as long as possible.",
           "delta": {
             "siege_progress": 6,
             "defenders": 2,

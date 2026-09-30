@@ -1,17 +1,16 @@
 /**
  * KaalNetra — Historical Context Screen
  *
- * PRD §5:
- *   Layout:
- *     - Large image on left
- *     - Facts on right
- *     - Timeline strip at bottom
- *   Facts should be concise.
- *   A "Historical Record" badge is present.
- *   Player role: Decision-maker within defensive command structure (NOT literally Jaimal).
+ * Immersive historical prologue.
+ * Shows:
+ *   - Overview header with Date, Location, and Armies
+ *   - 2-Column Story: Fort Artwork on Left + Story beats on Right
+ *   - 4 Leaders across full width (Jaimal, Patta, Udai Singh II, Akbar)
+ *   - Primary Sources in a dignified bottom panel
+ *   - Smooth progression to War Council
+ * Dark fortress theme, antique gold trims, zero gradients.
  */
 
-import { useState } from 'react';
 import { useStage } from '../../app/StageContext';
 import { useGameplay } from '../../app/GameplayContext';
 import GameHeader from '../common/GameHeader';
@@ -21,183 +20,217 @@ import { ENVIRONMENTS } from '../../assets/registry';
 export default function ContextScreen() {
   const { nextStage, prevStage } = useStage();
   const { scenario } = useGameplay();
-  const [activeScene, setActiveScene] = useState<'overview' | 'camp'>('overview');
 
   if (!scenario) return null;
 
-  const currentEnv = activeScene === 'overview'
-    ? ENVIRONMENTS.chittor_overview
-    : ENVIRONMENTS.mughal_siege_camp;
-
   return (
-    <div className="game-screen-container">
+    <div className="app-page-clean">
       <GameHeader badge="historical" />
 
-      <main className="context-screen-layout">
-        <div className="context-header">
-          <div className="context-badge-row">
-            <span className="badge-historical">📜 Documented Historical Record</span>
-            <span className="context-date-pill">{scenario.period}</span>
-          </div>
-          <h1 className="context-title">The Fall of Mewar’s Colossus</h1>
-          <p className="context-subtitle">
-            Documented historical background prior to the defensive command’s pivotal decisions.
-          </p>
-        </div>
-
-        {/* Strategic Monarchy Context: Udai Singh II vs Akbar */}
-        <section className="monarchs-overview-strip bg-stone-900/80 border border-amber-600/25 rounded-lg p-4 mb-4">
-          <div className="text-center mb-3">
-            <span className="text-[11px] uppercase tracking-widest text-amber-400 font-serif font-bold">
-              The Sovereign Confrontation (1567)
+      <main className="clean-container py-8 sm:py-10 space-y-8">
+        {/* Story Header */}
+        <header className="pb-5 border-b border-[#272E3D]">
+          <div className="text-kicker">The True Historical Story</div>
+          <h1 className="serif-heading text-3xl sm:text-4xl md:text-5xl text-[#F4EFE6] mt-1">
+            The Siege of Chittor Fort
+          </h1>
+          <div className="mt-3 text-sm flex flex-wrap items-center gap-3">
+            <span className="bg-[#141720] px-3 py-1 border border-[#272E3D] text-[#B8B09F]">
+              <strong className="text-[#DFBE76]">Date:</strong> October 1567 &ndash; February 1568
+            </span>
+            <span className="bg-[#141720] px-3 py-1 border border-[#272E3D] text-[#B8B09F]">
+              <strong className="text-[#DFBE76]">Location:</strong> Chittorgarh Fort, Mewar
+            </span>
+            <span className="bg-[#141720] px-3 py-1 border border-[#272E3D] text-[#B8B09F]">
+              <strong className="text-[#DFBE76]">Defenders:</strong> 8,000 Rajput Warriors
+            </span>
+            <span className="bg-[#141720] px-3 py-1 border border-[#272E3D] text-[#B8B09F]">
+              <strong className="text-[#DFBE76]">Besiegers:</strong> 60,000 Mughal Imperial Troops
             </span>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Mewar Ruler */}
-            <div className="flex items-center gap-3.5 bg-stone-950/60 border border-red-900/40 rounded-lg p-3">
-              <CharacterPortrait characterIdOrKey="udai_singh" size="sm" showBadge={false} />
-              <div className="text-left flex-1">
-                <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-red-950/80 text-amber-200 border border-red-800/50 font-bold">
-                  🛡️ Mewar Sovereignty
-                </span>
-                <h4 className="font-serif font-bold text-amber-100 text-sm mt-1">Maharana Udai Singh II</h4>
-                <p className="text-[11px] text-stone-300 leading-snug mt-1">
-                  Advised by his council to withdraw into the Aravalli hills to safeguard the Sisodia lineage and establish guerrilla depth, leaving Chittorgarh in the custody of Jaimal and Patta.
-                </p>
-              </div>
-            </div>
+        </header>
 
-            {/* Mughal Besieger */}
-            <div className="flex items-center gap-3.5 bg-stone-950/60 border border-emerald-900/40 rounded-lg p-3">
-              <CharacterPortrait characterIdOrKey="akbar" size="sm" showBadge={false} />
-              <div className="text-left flex-1">
-                <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-200 border border-emerald-800/50 font-bold">
-                  ⚔️ Imperial Mughal Crown
-                </span>
-                <h4 className="font-serif font-bold text-emerald-100 text-sm mt-1">Jalal-ud-din Akbar</h4>
-                <p className="text-[11px] text-stone-300 leading-snug mt-1">
-                  Personally directed the grand siege with 60,000 troops, employing Ottoman ordnance experts, 5,000 sappers, and heavy cannons to neutralize Chittor's natural escarpment.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* 2-Column Overview */}
+        <div className="layout-sidebar-grid">
+          {/* Left Column: Fort Illustration */}
+          <div className="space-y-4">
+            <figure className="border border-[#C5A059] bg-[#141720] p-2.5 shadow-md">
+              <picture>
+                <source srcSet={ENVIRONMENTS.chittor_overview.src} type="image/webp" />
+                <img
+                  src={ENVIRONMENTS.chittor_overview.fallbackSrc ?? ENVIRONMENTS.chittor_overview.src}
+                  alt="Chittor Fort Plateau"
+                  className="w-full aspect-[16/10] object-cover border border-[#272E3D]"
+                />
+              </picture>
+              <figcaption className="text-xs text-[#DFBE76] mt-2.5 text-center font-serif">
+                Chittorgarh sits on a 500-foot-tall rocky plateau, protected by 8 miles of stone ramparts.
+              </figcaption>
+            </figure>
 
-        {/* 2-Column Split: Image Left, Facts Right */}
-        <div className="context-split-grid">
-          {/* Left Column: Visual Asset */}
-          <div className="context-visual-pane">
-            <div className="context-img-frame">
-              {/* Scene Switcher Buttons */}
-              <div className="flex gap-1.5 mb-2">
-                <button
-                  onClick={() => setActiveScene('overview')}
-                  className={`text-xs px-2.5 py-1 rounded transition-all ${
-                    activeScene === 'overview'
-                      ? 'bg-amber-500 text-stone-950 font-bold'
-                      : 'bg-stone-800 text-stone-300 hover:text-amber-200'
-                  }`}
-                >
-                  🏰 Chittor Escarpment
-                </button>
-                <button
-                  onClick={() => setActiveScene('camp')}
-                  className={`text-xs px-2.5 py-1 rounded transition-all ${
-                    activeScene === 'camp'
-                      ? 'bg-amber-500 text-stone-950 font-bold'
-                      : 'bg-stone-800 text-stone-300 hover:text-amber-200'
-                  }`}
-                >
-                  ⛺ Imperial Siege Encampment
-                </button>
-              </div>
-
-              <img
-                src={currentEnv.src}
-                alt={currentEnv.name}
-                loading="eager"
-                decoding="async"
-                className="context-hero-img object-cover rounded-md"
-                style={{ aspectRatio: '16/9', maxHeight: '280px', width: '100%' }}
-              />
-              <div className="context-img-caption">
-                <strong>{currentEnv.name}</strong> &mdash; {currentEnv.description}
-              </div>
-            </div>
-
-            {/* Player Role Box */}
-            <div className="player-role-card">
-              <div className="role-icon">🛡️</div>
-              <div className="role-text">
-                <h4>Your Command Role</h4>
-                <p>
-                  You are a decision-maker operating within the Mewar defensive council.
-                  You evaluate logistical, military, and structural orders alongside historical commanders
-                  <strong> Rao Jaimal Rathore</strong> and <strong>Patta Chundawat</strong>.
-                </p>
-              </div>
+            <div className="p-4 bg-[#141720] border border-[#272E3D]">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#C5A059] block mb-1">
+                Fort Fortress Fact
+              </span>
+              <p className="text-xs text-[#B8B09F] leading-relaxed">
+                The fortress held 84 water reservoirs and rainwater pools (called <em>Gaumukh</em>), 
+                allowing thousands of people to hold out for months without an outside river.
+              </p>
             </div>
           </div>
 
-          {/* Right Column: Historical Facts */}
-          <div className="context-facts-pane">
-            <h2 className="facts-heading">Documented Strategic Realities</h2>
+          {/* Right Column: The 3 Story Beats */}
+          <div className="space-y-4">
+            <div className="p-5 bg-[#141720] border border-[#272E3D] hover:border-[#3D4659] transition-colors space-y-2">
+              <span className="text-xs font-bold text-[#C5A059] uppercase tracking-wider">
+                1. The Mughal Attack
+              </span>
+              <h3 className="serif-title text-xl text-[#F4EFE6]">
+                Emperor Akbar Arrives with 60,000 Soldiers
+              </h3>
+              <p className="text-sm text-[#B8B09F] leading-relaxed">
+                In October 1567, Emperor Akbar marched to conquer Chittor &mdash; the ultimate symbol of Rajput independence. 
+                His army brought giant bronze cannons, 5,000 diggers, and sealed every trail surrounding the mountain.
+              </p>
+            </div>
 
-            <ul className="facts-list">
-              {scenario.historical_context.map((fact, idx) => (
-                <li key={idx} className="fact-item">
-                  <span className="fact-bullet">{idx + 1}</span>
-                  <div className="fact-content">
-                    <p>{fact}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            <div className="p-5 bg-[#141720] border border-[#272E3D] hover:border-[#3D4659] transition-colors space-y-2">
+              <span className="text-xs font-bold text-[#C5A059] uppercase tracking-wider">
+                2. The King&apos;s Strategy
+              </span>
+              <h3 className="serif-title text-xl text-[#F4EFE6]">
+                King Udai Singh Saves the Royal Dynasty
+              </h3>
+              <p className="text-sm text-[#B8B09F] leading-relaxed">
+                Knowing that staying in the fort would risk total destruction of the royal family, 
+                King Udai Singh II took part of the army into the rugged Aravalli hills to fight on. 
+                He placed his two best commanders &mdash; <strong>Rao Jaimal</strong> and <strong>Rawat Patta</strong> &mdash; 
+                in charge of 8,000 garrison fighters and 30,000 villagers inside Chittor.
+              </p>
+            </div>
 
-            {/* Historical Constraints Card */}
-            {scenario.historical_constraints && (
-              <div className="constraints-card">
-                <h3>Historical Constraints</h3>
-                <ul>
-                  {scenario.historical_constraints.map((c, i) => (
-                    <li key={i}>
-                      <strong>{c.id.replace(/_/g, ' ')}:</strong> {c.description}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            <div className="p-5 bg-[#141720] border border-[#272E3D] hover:border-[#3D4659] transition-colors space-y-2">
+              <span className="text-xs font-bold text-[#C5A059] uppercase tracking-wider">
+                3. The Secret Weapon
+              </span>
+              <h3 className="serif-title text-xl text-[#F4EFE6]">
+                Giant Covered Tunnels (Sabats) Creep Up the Rock
+              </h3>
+              <p className="text-sm text-[#B8B09F] leading-relaxed">
+                Because the cliffs were too steep to climb with ladders, Akbar ordered his engineers to construct 
+                massive armored wooden tunnels called <em>sabats</em>. Covered in raw bull hides to deflect fire and arrows, 
+                these tunnels crept closer to the fort walls every day to place gunpowder mines underneath!
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Bottom Timeline Strip: Canonical History */}
-        <section className="context-timeline-strip">
-          <h3 className="timeline-strip-title">Chronological Sequence (Documented History)</h3>
-          <div className="timeline-horizontal-track">
-            {scenario.canonical_timeline.map((ev) => (
-              <div key={ev.id} className="timeline-node-card">
-                <span className="node-date">{ev.date_label}</span>
-                <h4 className="node-title">{ev.title}</h4>
-                <p className="node-desc">{ev.description}</p>
-                <span className="node-badge">{ev.evidence_level}</span>
+        {/* Full-Width 4-Leader Card Deck */}
+        <section className="space-y-4 pt-4 border-t border-[#272E3D]">
+          <div className="flex items-center justify-between">
+            <h2 className="serif-title text-2xl text-[#F4EFE6]">
+              The 4 Key Historical Leaders
+            </h2>
+            <span className="text-xs text-[#B8B09F]">
+              2 Defenders inside &bull; 1 King in the hills &bull; 1 Imperial Besieger
+            </span>
+          </div>
+
+          <div className="layout-4col-grid">
+            {/* Jaimal */}
+            <div className="p-4 bg-[#141720] border border-[#272E3D] hover:border-[#C5A059] transition-colors flex flex-col justify-between space-y-3">
+              <div className="flex items-center gap-3">
+                <CharacterPortrait characterIdOrKey="jaimal" size="md" showBadge={false} />
+                <div>
+                  <h3 className="font-bold text-base text-[#F4EFE6]">Rao Jaimal</h3>
+                  <span className="text-xs font-semibold text-[#DFBE76] block">Chief Defender</span>
+                  <span className="text-[11px] text-[#788194]">Rathore Chieftain</span>
+                </div>
               </div>
-            ))}
+              <p className="text-xs text-[#B8B09F] leading-relaxed">
+                Careful and tireless. He personally patrolled the walls day and night and directed repair teams under direct enemy fire.
+              </p>
+            </div>
+
+            {/* Patta */}
+            <div className="p-4 bg-[#141720] border border-[#272E3D] hover:border-[#C5A059] transition-colors flex flex-col justify-between space-y-3">
+              <div className="flex items-center gap-3">
+                <CharacterPortrait characterIdOrKey="patta" size="md" showBadge={false} />
+                <div>
+                  <h3 className="font-bold text-base text-[#F4EFE6]">Rawat Patta</h3>
+                  <span className="text-xs font-semibold text-[#DFBE76] block">Raid Commander</span>
+                  <span className="text-[11px] text-[#788194]">Lord of Kelwa</span>
+                </div>
+              </div>
+              <p className="text-xs text-[#B8B09F] leading-relaxed">
+                Fearless and aggressive. He led fast nighttime surprise sorties outside the gates to burn enemy siege equipment.
+              </p>
+            </div>
+
+            {/* Udai Singh II */}
+            <div className="p-4 bg-[#141720] border border-[#272E3D] hover:border-[#C5A059] transition-colors flex flex-col justify-between space-y-3">
+              <div className="flex items-center gap-3">
+                <CharacterPortrait characterIdOrKey="udai_singh" size="md" showBadge={false} />
+                <div>
+                  <h3 className="font-bold text-base text-[#F4EFE6]">Rana Udai Singh</h3>
+                  <span className="text-xs font-semibold text-[#B8B09F] block">Maharana of Mewar</span>
+                  <span className="text-[11px] text-[#788194]">Dynastic Leader</span>
+                </div>
+              </div>
+              <p className="text-xs text-[#B8B09F] leading-relaxed">
+                Preserved the royal lineage by fighting a guerrilla war from the Aravalli hills; he later founded the city of Udaipur.
+              </p>
+            </div>
+
+            {/* Akbar */}
+            <div className="p-4 bg-[#141720] border border-[#272E3D] hover:border-[#C5A059] transition-colors flex flex-col justify-between space-y-3">
+              <div className="flex items-center gap-3">
+                <CharacterPortrait characterIdOrKey="akbar" size="md" showBadge={false} />
+                <div>
+                  <h3 className="font-bold text-base text-[#F4EFE6]">Emperor Akbar</h3>
+                  <span className="text-xs font-semibold text-[#DFBE76] block">Mughal Padshah</span>
+                  <span className="text-[11px] text-[#788194]">Third Mughal Emperor</span>
+                </div>
+              </div>
+              <p className="text-xs text-[#B8B09F] leading-relaxed">
+                Personally commanded the siege with massive bronze cannons and 5,000 tunnel workers to break the fortress.
+              </p>
+            </div>
           </div>
         </section>
 
-        {/* Footer Navigation */}
-        <footer className="screen-footer">
-          <button className="game-btn game-btn-secondary" onClick={prevStage}>
+        {/* Primary Sources Accordion/Box */}
+        <section className="p-4 bg-[#141720] border border-[#272E3D]">
+          <details className="cursor-pointer">
+            <summary className="text-xs font-bold uppercase tracking-wider text-[#DFBE76] hover:text-[#F4EFE6]">
+              &#9432; Primary Historical Sources (Click to expand 4 historical records)
+            </summary>
+            <div className="mt-3 pt-3 border-t border-[#272E3D] grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-[#B8B09F]">
+              {scenario.evidence.map((ev) => (
+                <div key={ev.id} className="p-3 bg-[#0D0F14] border border-[#272E3D]">
+                  <strong className="text-[#DFBE76] block mb-0.5">{ev.source}</strong>
+                  <span>{ev.claim}</span>
+                </div>
+              ))}
+            </div>
+          </details>
+        </section>
+
+        {/* Navigation Action Bar */}
+        <div className="pt-4 border-t border-[#272E3D] flex items-center justify-between">
+          <button
+            className="btn-secondary-clean"
+            onClick={prevStage}
+          >
             &larr; Back to Scenarios
           </button>
           <button
-            className="game-btn game-btn-primary"
+            className="btn-primary-clean text-base py-3 px-8"
             onClick={nextStage}
-            id="proceed-to-briefing-btn"
           >
-            Proceed to Council Briefing &rarr;
+            Enter the War Council &rarr;
           </button>
-        </footer>
+        </div>
       </main>
     </div>
   );

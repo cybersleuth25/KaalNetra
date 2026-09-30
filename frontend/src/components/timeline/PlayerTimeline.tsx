@@ -1,11 +1,10 @@
 /**
  * KaalNetra — Player Counterfactual Timeline
  *
- * Visually displays the causal chain of the player's simulated orders:
- *   Decision → State Deltas → Thresholds / Sub-events → Situation Evolution
- *
- * Clearly labeled: "Counterfactual Simulation"
- * Does NOT claim that these simulated events historically occurred.
+ * Vertical causal timeline:
+ *   Decision → State Changes → Event / Consequence
+ * Clean typography, solid fortress borders, antique gold accents.
+ * Clearly labeled: "Your Simulation (Counterfactual)"
  */
 
 import type { TurnResult } from '../../simulation';
@@ -24,23 +23,27 @@ function formatDelta(val: number | undefined): string {
 export default function PlayerTimeline({ history }: PlayerTimelineProps) {
   if (history.length === 0) {
     return (
-      <div className="timeline-empty-card">
-        <p>No simulated turns recorded. Complete a decision sequence to inspect your causal timeline.</p>
+      <div className="p-8 text-center bg-[#141720] border border-[#272E3D]">
+        <p className="text-[#B8B09F] text-sm">
+          No simulated turns recorded. Complete a decision sequence to inspect your causal timeline.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="player-timeline-container">
-      <div className="timeline-heading-row">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span className="badge-simulation">⚔️ Counterfactual Simulation</span>
-          <span className="timeline-node-count">{history.length} Turn(s) Evaluated</span>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between pb-3 border-b border-[#272E3D]">
+        <div className="flex items-center gap-2">
+          <span className="text-xs uppercase tracking-wider font-bold text-[#FFA3A3] font-mono">
+            Your Simulation
+          </span>
+          <span className="text-xs text-[#B8B09F]">({history.length} Decision Turns)</span>
         </div>
-        <span className="timeline-disclaimer-pill">Simulation Assumption &bull; Pure Rule Engine</span>
+        <span className="text-xs text-[#788194] font-mono uppercase">Counterfactual Model</span>
       </div>
 
-      <div className="causal-nodes-flow">
+      <div className="space-y-8">
         {history.map((turnRes) => {
           const {
             turn,
@@ -48,95 +51,75 @@ export default function PlayerTimeline({ history }: PlayerTimelineProps) {
             option_id,
             event_description,
             effects,
-            thresholdEffects,
             state_before,
             state_after,
           } = turnRes;
 
           return (
-            <div key={turn} className="causal-turn-block">
+            <div key={turn} className="bg-[#141720] border border-[#272E3D] p-5 space-y-4 shadow-md">
               {/* Turn Header */}
-              <div className="causal-turn-header">
-                <span className="causal-turn-badge">Turn {turn}</span>
-                <span className="causal-turn-date">{state_after.date_label}</span>
-                <span className="causal-order-id">
-                  Order: <code>{decision_id} &rarr; {option_id}</code>
+              <div className="flex items-center justify-between pb-2 border-b border-[#272E3D]">
+                <span className="text-xs font-bold text-[#FFA3A3] font-mono uppercase">
+                  Turn {turn} &bull; {state_after.date_label}
+                </span>
+                <span className="text-xs text-[#788194] font-mono">
+                  {decision_id} &rarr; {option_id}
                 </span>
               </div>
 
-              {/* Step 1: Decision Input */}
-              <div className="causal-step step-decision">
-                <div className="step-indicator">
-                  <span className="step-dot" />
-                  <span className="step-label">1. Order Issued</span>
+              {/* Step 1: Decision */}
+              <div className="space-y-1">
+                <div className="text-xs uppercase tracking-wider font-bold text-[#C5A059] font-mono">
+                  1. Order Issued
                 </div>
-                <div className="step-body">
-                  <p className="step-description">{event_description}</p>
+                <p className="text-sm font-medium text-[#F4EFE6] leading-relaxed">
+                  {event_description}
+                </p>
+              </div>
+
+              {/* Down Arrow */}
+              <div className="text-center text-xs text-[#C5A059] py-0.5 font-mono">
+                &darr; State Transition &darr;
+              </div>
+
+              {/* Step 2: State Changes */}
+              <div className="space-y-2">
+                <div className="text-xs uppercase tracking-wider font-bold text-[#C5A059] font-mono">
+                  2. Parameter Impact
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {STATE_VAR_KEYS.map((k: StateVarKey) => {
+                    const net = effects[k] ?? (state_after[k] - state_before[k]);
+                    if (net === 0) return null;
+                    const isGood = k === 'siege_progress' ? net < 0 : net > 0;
+
+                    return (
+                      <div
+                        key={k}
+                        className="p-2 border border-[#272E3D] bg-[#0D0F14] text-xs flex justify-between items-center"
+                      >
+                        <span className="capitalize text-[#B8B09F]">{k.replace('_', ' ')}</span>
+                        <span className={`font-bold ${isGood ? 'text-[#79D19E]' : 'text-[#FFA3A3]'}`}>
+                          {formatDelta(net)}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Causal Link Arrow */}
-              <div className="causal-arrow">&darr; <span>Generates Resource Deltas</span> &darr;</div>
-
-              {/* Step 2: State Deltas */}
-              <div className="causal-step step-deltas">
-                <div className="step-indicator">
-                  <span className="step-dot" />
-                  <span className="step-label">2. Net State Transition</span>
-                </div>
-                <div className="step-body">
-                  <div className="causal-delta-grid">
-                    {STATE_VAR_KEYS.map((k: StateVarKey) => {
-                      const net = effects[k] ?? (state_after[k] - state_before[k]);
-                      if (net === 0) return null;
-                      const isGood = k === 'siege_progress' ? net < 0 : net > 0;
-
-                      return (
-                        <div key={k} className={`causal-delta-pill ${isGood ? 'pill-beneficial' : 'pill-adverse'}`}>
-                          <span className="delta-key">{k.replace('_', ' ')}:</span>
-                          <span className="delta-val">{formatDelta(net)}</span>
-                          <span className="delta-transition">({state_before[k]} &rarr; {state_after[k]})</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
+              {/* Down Arrow */}
+              <div className="text-center text-xs text-[#C5A059] py-0.5 font-mono">
+                &darr; Resulting Condition &darr;
               </div>
 
-              {/* Step 3: Triggered Thresholds (if any) */}
-              {thresholdEffects.length > 0 && (
-                <>
-                  <div className="causal-arrow">&darr; <span>Crosses Threshold Limits</span> &darr;</div>
-                  <div className="causal-step step-thresholds">
-                    <div className="step-indicator">
-                      <span className="step-dot dot-warning" />
-                      <span className="step-label">3. Threshold Rules Activated</span>
-                    </div>
-                    <div className="step-body">
-                      {thresholdEffects.map((te, idx) => (
-                        <div key={idx} className="threshold-rule-line">
-                          <strong>⚠️ {te.description}:</strong> Condition <code>{te.condition}</code> triggered additional strain.
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {/* Step 4: Downstream Situation */}
-              <div className="causal-arrow">&darr; <span>Determines Next Situation</span> &darr;</div>
-              <div className="causal-step step-situation">
-                <div className="step-indicator">
-                  <span className="step-dot" />
-                  <span className="step-label">4. Subsequent Defense Posture</span>
-                </div>
-                <div className="step-body">
-                  <p>
-                    Fort Integrity at <strong>{state_after.fort_integrity}%</strong>,
-                    Mughal Siege Progress at <strong>{state_after.siege_progress}%</strong>,
-                    with <strong>{state_after.defenders}%</strong> garrison strength remaining.
-                  </p>
-                </div>
+              {/* Step 3: Consequence */}
+              <div className="space-y-1 bg-[#0D0F14] border border-[#272E3D] p-3 text-xs text-[#B8B09F] leading-relaxed">
+                <span className="font-semibold text-[#DFBE76] block mb-0.5 font-mono">
+                  Resulting Garrison State:
+                </span>
+                Morale at {state_after.morale}%, Fort Integrity at {state_after.fort_integrity}%, 
+                Mughal Siege Progress at {state_after.siege_progress}%.
               </div>
             </div>
           );

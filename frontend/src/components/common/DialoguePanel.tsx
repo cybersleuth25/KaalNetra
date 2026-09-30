@@ -1,11 +1,12 @@
 /**
  * KaalNetra — Character Dialogue & Tactical Counsel Panel
  *
- * Implements Phase 6 Dialogue presentation:
- *   - Character portrait on left with consistent aspect ratio
- *   - Speaker name, role, and faction banner
- *   - Dialogue / counsel text in serif font with quotation styling
- *   - Interactive tab/button to cycle between advisers if multiple exist
+ * Immersive historical dialogue panel:
+ *   - Character portrait on left with consistent 3:4 aspect ratio
+ *   - Speaker name, role, and historical context
+ *   - Dialogue in clean typography with gold quote bar
+ *   - Simple solid tab buttons to cycle between advisers
+ *   - Zero gradients, zero glassmorphism, solid palette
  */
 
 import { useState } from 'react';
@@ -17,7 +18,7 @@ export interface DialogueEntry {
   speakerName?: string;
   title?: string;
   text: string;
-  perspectiveTag?: string; // e.g. "Tactical Counsel", "Logistical Reality", "Imperial Intel"
+  perspectiveTag?: string;
 }
 
 interface DialoguePanelProps {
@@ -39,17 +40,14 @@ export default function DialoguePanel({
   const char = getCharacterAsset(currentEntry.characterId);
 
   return (
-    <div className={`dialogue-panel-container bg-stone-900/85 border border-amber-600/30 rounded-lg p-4 shadow-xl backdrop-blur-md ${className}`}>
+    <div className={`bg-[#141720] border border-[#272E3D] p-4 shadow-md ${className}`}>
       {/* Header with Title and Adviser Tabs */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-amber-700/20 pb-2 mb-3">
-        <div className="flex items-center gap-2">
-          <span className="text-amber-400 text-sm">📜</span>
-          <h4 className="text-xs uppercase tracking-widest font-serif font-bold text-amber-300">
-            {title}
-          </h4>
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#272E3D] pb-2 mb-3">
+        <div className="text-xs uppercase tracking-wider font-bold text-[#C5A059] font-mono">
+          {title}
         </div>
 
-        {/* Multi-speaker Switcher Tabs if > 1 speaker */}
+        {/* Multi-speaker Switcher Tabs */}
         {entries.length > 1 && (
           <div className="flex gap-1 overflow-x-auto py-0.5">
             {entries.map((entry, idx) => {
@@ -58,15 +56,15 @@ export default function DialoguePanel({
               return (
                 <button
                   key={entry.characterId + idx}
+                  type="button"
                   onClick={() => setActiveIndex(idx)}
-                  className={`text-[11px] font-sans px-2.5 py-1 rounded transition-all flex items-center gap-1.5 ${
+                  className={`text-xs px-2.5 py-1 border transition-colors ${
                     isActive
-                      ? 'bg-amber-500 text-stone-950 font-bold shadow-sm'
-                      : 'bg-stone-800/80 text-stone-300 hover:bg-stone-700 hover:text-amber-200 border border-stone-700/50'
+                      ? 'border-[#C5A059] bg-[#9E2A2B] text-[#F4EFE6] font-bold'
+                      : 'border-[#272E3D] bg-[#0D0F14] text-[#B8B09F] hover:bg-[#1B202B]'
                   }`}
                 >
-                  <span>{speakerChar.faction === 'mewar' ? '🛡️' : '⚔️'}</span>
-                  <span>{speakerChar.name.split(' ')[0]}</span>
+                  {speakerChar.name.split(' ')[0]}
                 </button>
               );
             })}
@@ -89,36 +87,33 @@ export default function DialoguePanel({
         <div className="flex-1 flex flex-col justify-between self-stretch text-left">
           <div>
             <div className="flex flex-wrap items-baseline gap-2 mb-1">
-              <span className="font-serif font-bold text-amber-200 text-sm md:text-base">
+              <span className="serif-title font-bold text-[#F4EFE6] text-base">
                 {currentEntry.speakerName || char.name}
               </span>
-              <span className="text-[11px] text-stone-400">
-                — {currentEntry.title || char.role}
+              <span className="text-xs text-[#B8B09F]">
+                &mdash; {currentEntry.title || char.role}
               </span>
             </div>
 
             {currentEntry.perspectiveTag && (
-              <span className="inline-block text-[10px] font-mono uppercase tracking-wider text-amber-400 bg-amber-950/60 border border-amber-700/40 px-2 py-0.5 rounded mb-2">
+              <span className="inline-block text-[10px] uppercase tracking-wider font-semibold text-[#DFBE76] bg-[#0D0F14] border border-[#272E3D] px-2 py-0.5 mb-2 font-mono">
                 {currentEntry.perspectiveTag}
               </span>
             )}
 
-            <div className="relative pl-3 border-l-2 border-amber-500/50 my-1">
-              <p className="text-xs md:text-sm text-parchment-200 font-serif italic leading-relaxed">
-                "{currentEntry.text}"
+            <div className="pl-3 border-l-2 border-[#C5A059] my-1 bg-[#0D0F14] p-2">
+              <p className="text-sm text-[#F4EFE6] italic leading-relaxed font-serif">
+                &ldquo;{currentEntry.text}&rdquo;
               </p>
             </div>
           </div>
 
-          {/* Character Sub-note / Context */}
-          <div className="mt-3 pt-2 border-t border-stone-800/80 text-[11px] text-stone-400 flex items-center justify-between">
+          {/* Character Sub-note */}
+          <div className="mt-3 pt-2 border-t border-[#272E3D] text-xs text-[#788194] flex items-center justify-between font-mono">
             <span>
               {char.historical
-                ? 'Documented in primary chronicles (Akbarnama, Bada\'uni)'
-                : 'Fictional composite representing institutional role'}
-            </span>
-            <span className="text-stone-500 font-mono text-[10px]">
-              Chittorgarh Defensive Council
+                ? 'Documented in primary chronicles (Akbarnama, Badauni)'
+                : 'Fictional composite representing institutional administrative role'}
             </span>
           </div>
         </div>

@@ -1,10 +1,11 @@
 /**
  * KaalNetra — Phaser Tactical Map Component
  *
- * Implements Phase 6 Game-like Map Presentation:
+ * Implements Game-like Strategic Cartography:
  *   - Embedded Phaser 3/4 canvas with strategic cartography
  *   - Interactive Point-of-Interest selection (Lakhota, Suraj Pol, Gaumukh, Sabats)
  *   - Contextual intelligence card below canvas
+ *   - Dark fortress theme, antique gold trims, zero gradients
  *   - Full destruction on unmount to prevent memory leaks and ghost loops
  */
 
@@ -86,10 +87,10 @@ export default function PhaserTacticalMap({
   };
 
   return (
-    <div className={`phaser-tactical-map-root flex flex-col gap-2 ${className}`}>
+    <div className={`phaser-tactical-map-root flex flex-col gap-1.5 ${className}`}>
       {/* Top Controls Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-2 bg-stone-900/90 border border-amber-600/30 px-3 py-1.5 rounded-t-lg">
-        <div className="flex items-center gap-1.5 text-xs text-amber-300 font-serif font-bold uppercase tracking-wider">
+      <div className="flex flex-wrap items-center justify-between gap-2 bg-[#141720] border border-[#272E3D] px-3 py-1.5">
+        <div className="flex items-center gap-1.5 text-xs text-[#DFBE76] font-mono font-bold uppercase tracking-wider">
           <span>🗺️</span>
           <span>Tactical Map of Chittorgarh Environs (1567)</span>
         </div>
@@ -100,10 +101,10 @@ export default function PhaserTacticalMap({
             <button
               key={poi.id}
               onClick={() => handleQuickSelect(poi)}
-              className={`text-[10px] font-sans px-2 py-0.5 rounded transition-all whitespace-nowrap ${
+              className={`text-[10px] font-mono px-2 py-0.5 transition-colors whitespace-nowrap border ${
                 selectedPoint.id === poi.id
-                  ? 'bg-amber-500 text-stone-950 font-bold'
-                  : 'bg-stone-800 text-stone-300 hover:bg-stone-700 hover:text-amber-200'
+                  ? 'bg-[#C5A059] border-[#DFBE76] text-[#0D0F14] font-bold'
+                  : 'bg-[#0D0F14] border-[#272E3D] text-[#B8B09F] hover:border-[#C5A059]'
               }`}
             >
               {poi.name.split(' (')[0]}
@@ -116,17 +117,17 @@ export default function PhaserTacticalMap({
       <div
         ref={containerRef}
         style={{ height: `${height}px` }}
-        className="w-full relative overflow-hidden bg-stone-950 border-x border-amber-600/30 shadow-inner"
+        className="w-full relative overflow-hidden bg-[#0D0F14] border border-[#272E3D]"
       >
         {!isLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center text-amber-400 text-xs font-serif">
+          <div className="absolute inset-0 flex items-center justify-center text-[#DFBE76] text-xs font-mono">
             Loading Cartographic Data...
           </div>
         )}
       </div>
 
       {/* Selected Point Intelligence Card */}
-      <div className="bg-stone-900/95 border border-amber-600/30 border-t-0 p-3 rounded-b-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-left">
+      <div className="bg-[#141720] border border-[#272E3D] p-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-left">
         <div>
           <div className="flex items-center gap-2">
             <span className="text-sm">
@@ -138,30 +139,30 @@ export default function PhaserTacticalMap({
                 ? '🏰'
                 : '⚔️'}
             </span>
-            <h5 className="font-serif font-bold text-amber-200 text-xs md:text-sm">
+            <h5 className="font-bold text-[#F4EFE6] text-xs md:text-sm">
               {selectedPoint.name}
             </h5>
             <span
-              className={`text-[9px] font-mono uppercase px-1.5 py-0.2 rounded border ${
+              className={`text-[9px] font-mono uppercase px-1.5 py-0.2 border ${
                 selectedPoint.type === 'danger'
-                  ? 'bg-red-950/60 border-red-700/50 text-red-300'
+                  ? 'bg-[#2A1212] border-[#9E2A2B] text-[#FFA3A3]'
                   : selectedPoint.type === 'resource'
-                  ? 'bg-sky-950/60 border-sky-700/50 text-sky-300'
+                  ? 'bg-[#12281D] border-[#2E724F] text-[#79D19E]'
                   : selectedPoint.type === 'defense'
-                  ? 'bg-amber-950/60 border-amber-700/50 text-amber-300'
-                  : 'bg-emerald-950/60 border-emerald-700/50 text-emerald-300'
+                  ? 'bg-[#241D12] border-[#C5A059] text-[#DFBE76]'
+                  : 'bg-[#12281D] border-[#2E724F] text-[#79D19E]'
               }`}
             >
               {selectedPoint.type}
             </span>
           </div>
-          <p className="text-xs text-parchment-200 mt-1 leading-snug">
+          <p className="text-xs text-[#B8B09F] mt-1 leading-snug">
             {selectedPoint.description}
           </p>
         </div>
 
-        <div className="bg-stone-950/70 border border-stone-700/40 p-2 rounded text-[11px] text-stone-300 max-w-xs flex-shrink-0">
-          <strong className="text-amber-400 font-serif">Tactical Note: </strong>
+        <div className="bg-[#0D0F14] border border-[#272E3D] p-2 text-[11px] text-[#B8B09F] max-w-xs flex-shrink-0 font-mono">
+          <strong className="text-[#DFBE76]">Tactical Note: </strong>
           {selectedPoint.tacticalNote}
         </div>
       </div>

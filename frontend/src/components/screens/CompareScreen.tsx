@@ -1,21 +1,14 @@
 /**
- * KaalNetra — Historical Comparison Screen (Phase 5)
+ * KaalNetra — Historical Comparison Screen
  *
- * Implements KaalNetra's signature educational feature:
- *   - Side-by-side Dual Timeline (Counterfactual Simulation vs Documented Historical Record)
- *   - "Why Are They Different?" in-depth analytical section:
- *       - Historical constraints
- *       - Available technology (Mughal mines/sabats vs ramparts)
- *       - Geography (Chittor plateau vs valley encirclement)
- *       - Resources (finite cistern water vs external supply)
- *       - Military & information limitations
- *       - Political & social context
- *   - Clear labels:
- *       "Counterfactual Simulation"
- *       "Documented Historical Record"
- *       "Simulation Assumption"
- *   - Historical evidence/source cards connecting claims to scenario sources
- *   - Navigation: "Proceed to Historical Reflection →"
+ * Dual timeline comparison.
+ * Features:
+ *   - Two-column comparison: YOUR SIMULATION vs DOCUMENTED HISTORY
+ *   - Visually obvious distinction (crimson accent vs gold/ochre accent)
+ *   - Immutable canonical history
+ *   - "Why Are They Different?" explanatory section covering:
+ *       historical constraints, resources, geography, technology, military conditions, info limitations
+ * Dark fortress aesthetic, antique gold trims, zero gradients.
  */
 
 import { useState } from 'react';
@@ -30,238 +23,156 @@ export default function CompareScreen() {
   const { goToStage, prevStage } = useStage();
   const { scenario, session } = useGameplay();
   const [activeEvidenceId, setActiveEvidenceId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'dual_timeline' | 'why_different' | 'sources'>('dual_timeline');
 
   if (!scenario || !session) return null;
 
   const history = session.turnHistory;
 
   return (
-    <div className="game-screen-container">
+    <div className="app-page-clean">
       <GameHeader badge="result" />
 
-      <main className="compare-screen-layout">
+      <main className="clean-container py-10 space-y-12">
         {/* Screen Header */}
-        <div className="compare-screen-header">
-          <div className="compare-labels-row">
-            <span className="badge-simulation">⚔️ Counterfactual Simulation</span>
-            <span className="compare-vs-badge">VS</span>
-            <span className="badge-historical">📜 Documented Historical Record</span>
-          </div>
-
-          <h1 className="compare-title">Comparative Timeline &amp; Historical Analysis</h1>
-          <p className="compare-subtitle">
-            Juxtaposing your simulated defensive path against the documented events of the 1567–1568 siege of Chittor.
+        <header className="pb-6 border-b border-[#272E3D] space-y-2">
+          <div className="text-kicker">Compare The Two Timelines</div>
+          <h1 className="serif-heading text-3xl md:text-5xl text-[#F4EFE6]">
+            Your Game vs. Real History
+          </h1>
+          <p className="text-base text-[#B8B09F] max-w-3xl leading-relaxed">
+            See how your defense choices compare side-by-side with what actually took place in the year 1568.
           </p>
 
-          {/* Prominent Architectural Disclaimer */}
-          <div className="simulation-assumption-banner">
-            <span className="assumption-icon">ℹ️</span>
-            <div>
-              <strong>Simulation Assumption:</strong> The choices and states displayed under "Counterfactual Simulation"
-              represent authored systemic models evaluated by KaalNetra's deterministic rule engine.
-              They are educational what-if analyses and do <strong>not</strong> assert that history unfolded in this manner.
+          {/* Plain Educational Notice */}
+          <div className="p-4 bg-[#141720] border-l-4 border-l-[#C5A059] border-[#272E3D] text-xs text-[#B8B09F] mt-4">
+            <strong className="text-[#DFBE76]">How to read this:</strong> On the <strong>left</strong> is your imaginary battle outcome based on your choices. 
+            On the <strong>right</strong> is real documented history written down by eyewitness historians in 1568.
+          </div>
+        </header>
+
+        {/* Section 1: 2-Column Side-by-Side Comparison */}
+        <section className="space-y-4">
+          <h2 className="serif-title text-2xl text-[#F4EFE6]">
+            Side-by-Side Timeline Comparison
+          </h2>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            {/* Left: Player Timeline */}
+            <div className="bg-[#141720] border border-[#272E3D] p-6 space-y-4 shadow-md">
+              <PlayerTimeline history={history} />
+            </div>
+
+            {/* Right: Canonical Timeline */}
+            <div className="bg-[#141720] border border-[#272E3D] p-6 space-y-4 shadow-md">
+              <CanonicalTimeline
+                timeline={scenario.canonical_timeline}
+                evidenceList={scenario.evidence}
+                onSelectEvidence={(id) => setActiveEvidenceId(id)}
+              />
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Section Navigation Tabs */}
-        <div className="compare-nav-tabs">
-          <button
-            className={`compare-tab-btn ${activeTab === 'dual_timeline' ? 'tab-btn-active' : ''}`}
-            onClick={() => setActiveTab('dual_timeline')}
-          >
-            ⏱️ Dual Timelines (Side-by-Side)
-          </button>
-          <button
-            className={`compare-tab-btn ${activeTab === 'why_different' ? 'tab-btn-active' : ''}`}
-            onClick={() => setActiveTab('why_different')}
-          >
-            🔍 Why Are They Different?
-          </button>
-          <button
-            className={`compare-tab-btn ${activeTab === 'sources' ? 'tab-btn-active' : ''}`}
-            onClick={() => setActiveTab('sources')}
-          >
-            📚 Evidence &amp; Source Index ({scenario.evidence.length})
-          </button>
-        </div>
+        {/* Section 2: Why Are They Different? */}
+        <section className="bg-[#141720] border border-[#272E3D] p-6 sm:p-8 space-y-6 shadow-md">
+          <div className="border-b border-[#272E3D] pb-4">
+            <div className="text-kicker">Historiographical Explanation</div>
+            <h2 className="serif-heading text-2xl md:text-3xl text-[#F4EFE6] mt-1">
+              Why Are They Different?
+            </h2>
+            <p className="text-sm text-[#B8B09F] mt-1">
+              Key systemic factors that bound and governed the historical outcome at Chittor.
+            </p>
+          </div>
 
-        {/* TAB 1: Side-by-Side Dual Timelines */}
-        {activeTab === 'dual_timeline' && (
-          <section className="dual-timeline-section">
-            <div className="dual-timeline-grid">
-              {/* Left Column: Player Timeline */}
-              <div className="timeline-pane player-pane">
-                <PlayerTimeline history={history} />
-              </div>
-
-              {/* Right Column: Canonical Timeline */}
-              <div className="timeline-pane canon-pane">
-                <CanonicalTimeline
-                  timeline={scenario.canonical_timeline}
-                  evidenceList={scenario.evidence}
-                  onSelectEvidence={(id) => setActiveEvidenceId(id)}
-                />
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* TAB 2: Why Are They Different? */}
-        {activeTab === 'why_different' && (
-          <section className="why-different-section">
-            <div className="why-different-header">
-              <span className="section-eyebrow">Causal &amp; Contextual Dissection</span>
-              <h2>Why Did Your Simulation Diverge From History?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-sm text-[#B8B09F] leading-relaxed">
+            {/* 1. Constraints */}
+            <div className="p-4 bg-[#0D0F14] border border-[#272E3D] space-y-2">
+              <h3 className="font-bold text-[#F4EFE6] text-base">
+                1. No Outside Rescue
+              </h3>
               <p>
-                Historical outcomes are rarely the result of a single isolated order.
-                They are bounded by hard technological, geographic, logistical, and political realities.
+                Akbar’s army completely surrounded the mountain. King Udai Singh was fighting in the hills to save the kingdom, so no rescue army could ever come.
               </p>
             </div>
 
-            <div className="reasons-grid">
-              {/* 1. Technology */}
-              <div className="reason-card">
-                <div className="reason-header">
-                  <span className="reason-icon">💣</span>
-                  <h3>1. Siege Technology &amp; Mining</h3>
-                </div>
-                <div className="reason-body">
-                  <p>
-                    <strong>Mughal Engineering:</strong> Akbar deployed thousands of sappers constructing covered
-                    wooden galleries (<em>sabats</em>) wide enough for ten horsemen abreast, shielded by raw rawhide.
-                  </p>
-                  <p>
-                    <strong>Subterranean Gunpowder Mines:</strong> The catastrophic failure of Chittor's Lakhota bastion
-                    resulted from massive dual gunpowder mines detonated underground, blowing apart masonry that had
-                    withstood direct catapult shot for centuries.
-                  </p>
-                  <span className="reason-tag">Constraint: Gunpowder Assault Dynamics</span>
-                </div>
-              </div>
-
-              {/* 2. Geography & Encirclement */}
-              <div className="reason-card">
-                <div className="reason-header">
-                  <span className="reason-icon">⛰️</span>
-                  <h3>2. Geography &amp; Total Isolation</h3>
-                </div>
-                <div className="reason-body">
-                  <p>
-                    <strong>Plateau Advantage vs. Encirclement Trap:</strong> Chittor’s 500-foot scarp prevented cavalry
-                    assault, but its 8-mile perimeter required massive troop dispersion along multiple gates (Suraj Pol,
-                    Bhairon Pol, Hanuman Pol).
-                  </p>
-                  <p>
-                    <strong>No External Relief:</strong> Once Akbar’s forces anchored camps across the Berach River and
-                    southern plain, Chittor was completely sealed. No allied Rajput coalition could assemble in time to
-                    relieve the fort.
-                  </p>
-                  <span className="reason-tag">Constraint: Zero External Reinforcements</span>
-                </div>
-              </div>
-
-              {/* 3. Finite Resources vs. Empire Logistical Depth */}
-              <div className="reason-card">
-                <div className="reason-header">
-                  <span className="reason-icon">💧</span>
-                  <h3>3. Asymmetric Logistics &amp; Water</h3>
-                </div>
-                <div className="reason-body">
-                  <p>
-                    <strong>Finite Citadels:</strong> The fort relied solely on monsoon reservoirs like Gaumukh Kund and
-                    paved rain cisterns. With 38,000 souls within (8,000 combatants + 30,000 civilians), every week of
-                    siege drained rations without replenishment.
-                  </p>
-                  <p>
-                    <strong>Imperial Supply Train:</strong> The Mughal army drew inexhaustible grain supplies from the
-                    rich agricultural plains of Malwa and Delhi through established caravan supply lines.
-                  </p>
-                  <span className="reason-tag">Constraint: Resource Asymmetry</span>
-                </div>
-              </div>
-
-              {/* 4. Command Structure & Psychological Crisis */}
-              <div className="reason-card">
-                <div className="reason-header">
-                  <span className="reason-icon">👑</span>
-                  <h3>4. Command &amp; Political Realities</h3>
-                </div>
-                <div className="reason-body">
-                  <p>
-                    <strong>Strategic Withdrawal of Udai Singh II:</strong> Rana Udai Singh’s council wisely insisted
-                    he withdraw into the Aravalli forests to preserve the Guhila/Sisodia lineage, leaving Chittor to
-                    commanders Jaimal and Patta.
-                  </p>
-                  <p>
-                    <strong>The Death of Jaimal:</strong> In documented history, the mortal wounding of Jaimal at the
-                    breach shattered defensive command. In your simulation, defense survived according to the cohesion
-                    of your surviving garrison.
-                  </p>
-                  <span className="reason-tag">Constraint: Leadership Vulnerability</span>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* TAB 3: Evidence & Sources Index */}
-        {activeTab === 'sources' && (
-          <section className="sources-index-section">
-            <div className="sources-index-header">
-              <span className="section-eyebrow">Scholarly Rigor</span>
-              <h2>Documented Historical Evidence &amp; Sources</h2>
+            {/* 2. Resources */}
+            <div className="p-4 bg-[#0D0F14] border border-[#272E3D] space-y-2">
+              <h3 className="font-bold text-[#F4EFE6] text-base">
+                2. Limited Food &amp; Water
+              </h3>
               <p>
-                Every historical assertion in KaalNetra is grounded in primary court chronicles, contemporary
-                accounts, or authoritative scholarly syntheses. Click any card for details.
+                The fort had only the grain inside its towers and rainwater in rock tanks. Because the fort was surrounded, no new food or water could ever enter.
               </p>
             </div>
 
-            <div className="evidence-cards-grid">
-              {scenario.evidence.map((ev) => (
-                <div
-                  key={ev.id}
-                  className="evidence-item-card"
-                  onClick={() => setActiveEvidenceId(ev.id)}
-                >
-                  <div className="evidence-item-top">
-                    <span className="evidence-badge-tag">{ev.evidence_level}</span>
-                    <span className="evidence-type-tag">{ev.type}</span>
-                  </div>
-                  <h3 className="evidence-claim-title">{ev.claim}</h3>
-                  <p className="evidence-source-line">
-                    <strong>Source:</strong> {ev.source}
-                  </p>
-                  {ev.note && <p className="evidence-note-snippet">{ev.note}</p>}
-                </div>
-              ))}
+            {/* 3. Geography */}
+            <div className="p-4 bg-[#0D0F14] border border-[#272E3D] space-y-2">
+              <h3 className="font-bold text-[#F4EFE6] text-base">
+                3. Giant Mountain Plateau
+              </h3>
+              <p>
+                Chittor stood 500 feet high on a steep cliff, making ladder attacks impossible. But its 8-mile wall was so long that defenders were spread very thin.
+              </p>
             </div>
-          </section>
-        )}
 
-        {/* Footer Navigation */}
-        <footer className="screen-footer">
-          <button className="game-btn game-btn-secondary" onClick={prevStage}>
-            &larr; Back to Final Outcome
-          </button>
+            {/* 4. Technology */}
+            <div className="p-4 bg-[#0D0F14] border border-[#272E3D] space-y-2">
+              <h3 className="font-bold text-[#F4EFE6] text-base">
+                4. Gunpowder Mines &amp; Tunnels
+              </h3>
+              <p>
+                Akbar brought 5,000 diggers who built bullet-proof wooden tunnels (<em>sabats</em>) right up to the walls, then buried barrels of gunpowder to blow them up.
+              </p>
+            </div>
 
+            {/* 5. Military Balance */}
+            <div className="p-4 bg-[#0D0F14] border border-[#272E3D] space-y-2">
+              <h3 className="font-bold text-[#F4EFE6] text-base">
+                5. 8,000 vs. 60,000 Soldiers
+              </h3>
+              <p>
+                The 8,000 Rajput defenders were outnumbered almost 8 to 1. Akbar had unlimited reinforcements, big bronze cannons, and gunners from across his empire.
+              </p>
+            </div>
+
+            {/* 6. Information Limitations */}
+            <div className="p-4 bg-[#0D0F14] border border-[#272E3D] space-y-2">
+              <h3 className="font-bold text-[#F4EFE6] text-base">
+                6. Fighting in the Dark
+              </h3>
+              <p>
+                Defenders inside could not see through the smoke or underground. They had no way of knowing where the next gunpowder tunnel was until it detonated.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Transition Actions */}
+        <div className="flex items-center justify-between pt-4">
           <button
-            className="game-btn game-btn-primary game-btn-lg"
+            className="btn-secondary-clean"
+            onClick={prevStage}
+          >
+            &larr; Back to Outcome
+          </button>
+          <button
+            className="btn-primary-clean"
             onClick={() => goToStage('REFLECTION')}
-            id="proceed-to-reflection-btn"
           >
             Proceed to Historical Reflection &rarr;
           </button>
-        </footer>
+        </div>
       </main>
 
-      {/* Historical Evidence Drawer Modal */}
-      <EvidenceDrawer
-        evidenceList={scenario.evidence}
-        activeEvidenceId={activeEvidenceId}
-        onClose={() => setActiveEvidenceId(null)}
-      />
+      {/* Evidence Drawer */}
+      {activeEvidenceId && (
+        <EvidenceDrawer
+          activeEvidenceId={activeEvidenceId}
+          evidenceList={scenario.evidence}
+          onClose={() => setActiveEvidenceId(null)}
+        />
+      )}
     </div>
   );
 }
