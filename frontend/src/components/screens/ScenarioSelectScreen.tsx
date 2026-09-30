@@ -1,13 +1,12 @@
 /**
- * KaalNetra — Scenario Selection Screen
+ * KaalNetra — Cinematic Historical Scenario Selection Screen
  *
- * Immersive historical campaign selector.
- * Features:
- *   CHITTOR FORT
- *   1567–1568 CE
- *   The Defense of Chittor
- *   [ Begin Scenario ]
- * Solid dark basalt background, antique gold frames, zero gradients.
+ * Implements Section 5 of design specification:
+ *   - Cinematic historical scenario cards
+ *   - Image-first composition with 1–2px subtle gold border
+ *   - Dark overlay, serif title, location, date / period
+ *   - Restrained hover movement (image scale 1.03, gold border brightens, card rises 6px)
+ *   - "Enter Scenario" historical action
  */
 
 import { useStage } from '../../app/StageContext';
@@ -15,15 +14,18 @@ import { useGameplay } from '../../app/GameplayContext';
 import GameHeader from '../common/GameHeader';
 
 export default function ScenarioSelectScreen() {
-  const { nextStage } = useStage();
+  const { nextStage, goToStage } = useStage();
   const { scenario, isLoading, error } = useGameplay();
 
   if (isLoading) {
     return (
       <div className="app-page-clean">
         <GameHeader />
-        <div className="clean-content-box py-16 text-center m-8">
-          <p className="text-[#B8B09F]">Unrolling historical war records...</p>
+        <div className="clean-container py-24 text-center">
+          <div className="inline-block p-8 bg-[#161412] border border-[#B99652] shadow-2xl">
+            <p className="font-['Cinzel'] text-lg text-[#D1B16A]">Unrolling Historical Dossiers...</p>
+            <p className="text-xs text-[#8F8270] mt-1 font-mono">Accessing Imperial Chronicles &bull; 1567 CE</p>
+          </div>
         </div>
       </div>
     );
@@ -33,9 +35,17 @@ export default function ScenarioSelectScreen() {
     return (
       <div className="app-page-clean">
         <GameHeader />
-        <div className="clean-content-box py-16 text-center m-8 border-[#9E2A2B]">
-          <h3 className="serif-title text-xl text-[#DFBE76] mb-2">Scenario Unavailable</h3>
-          <p className="text-[#B8B09F]">{error ?? 'Scenario data could not be loaded.'}</p>
+        <div className="clean-container py-24 text-center">
+          <div className="inline-block p-8 bg-[#161412] border border-[#8C2D2E] shadow-2xl max-w-lg">
+            <h3 className="font-['Cinzel'] text-xl text-[#FFA5A5] mb-2">Scenario Unavailable</h3>
+            <p className="text-sm text-[#D8C9AA]">{error ?? 'Scenario archive could not be accessed.'}</p>
+            <button
+              className="btn-historical-secondary text-xs mt-4"
+              onClick={() => goToStage('HOME')}
+            >
+              &larr; Return to Archives
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -45,71 +55,192 @@ export default function ScenarioSelectScreen() {
     <div className="app-page-clean">
       <GameHeader />
 
-      <main className="clean-container py-10">
-        <div className="scenario-select-intro mb-8">
-          <div className="text-kicker">Choose a Mission</div>
-          <h1 className="serif-heading text-3xl md:text-5xl text-[#F4EFE6] mt-1">
-            Historical Battles &amp; Sieges
+      <main className="clean-container py-10 sm:py-14 space-y-10">
+        {/* Section Header */}
+        <div className="border-b border-[#2B251D] pb-6">
+          <div className="text-kicker">Historical Operations Catalog</div>
+          <h1 className="serif-heading text-3xl sm:text-4xl md:text-5xl text-[#F4E9D0] mt-1">
+            Choose a Historical Scenario
           </h1>
-          <p className="text-[#B8B09F] text-base max-w-2xl mt-2 leading-relaxed">
-            Step into the shoes of fort commanders at pivotal crossroads in Indian history. Test your defense strategy against overwhelming imperial odds.
+          <p className="text-sm text-[#D8C9AA] max-w-3xl mt-2 leading-relaxed">
+            Select a critical historical inflection point. Step into the shoes of commanding decision-makers, 
+            test alternative strategies against systemic realities, and compare your outcome directly against documented records.
           </p>
         </div>
 
-        {/* Primary Scenario Card */}
-        <section className="scenario-featured-panel">
-          <div className="scenario-panel-grid">
-            {/* Visual Column */}
-            <div className="scenario-panel-visual">
+        {/* Primary Featured Scenario Card (Chittorgarh 1567) */}
+        <section>
+          <div className="text-xs font-mono uppercase tracking-[0.2em] text-[#B99652] mb-3 flex items-center gap-2">
+            <span>◈ Active Campaign Dossier</span>
+            <span className="w-12 h-px bg-[#B99652]/40" />
+          </div>
+
+          <div className="scenario-card-cinematic corner-ornament grid grid-cols-1 lg:grid-cols-12 gap-0">
+            {/* Image-First Composition Column */}
+            <div className="lg:col-span-7 scenario-media-frame relative min-h-[320px] lg:min-h-[440px]">
               <picture>
                 <source srcSet="/assets/environments/chittor_overview.webp" type="image/webp" />
                 <img
                   src="/assets/environments/chittor_overview.png"
-                  alt="The Fortress of Chittor"
-                  className="scenario-panel-img"
+                  alt="Panoramic view of Chittorgarh fortress"
+                  className="w-full h-full object-cover"
                 />
               </picture>
+              <div className="scenario-media-overlay" />
+
+              {/* Badges on artwork */}
+              <div className="absolute top-4 left-4 flex flex-wrap gap-2 z-10">
+                <span className="text-[11px] font-bold px-3 py-1 bg-[#11110F]/90 border border-[#B99652] text-[#D1B16A] uppercase tracking-wider font-mono">
+                  Mewar Chronicles &bull; 1567 CE
+                </span>
+                <span className="text-[11px] font-semibold px-2.5 py-1 bg-[#11110F]/80 border border-[#2B251D] text-[#D8C9AA] uppercase tracking-wider font-mono">
+                  Full Simulation Ready
+                </span>
+              </div>
+
+              <div className="absolute bottom-4 left-4 right-4 z-10 hidden sm:block">
+                <span className="text-[11px] text-[#D1B16A] font-['Cormorant_Garamond'] italic tracking-wide">
+                  &ldquo;A 500-foot rocky citadel defended by 8,000 against Akbar&apos;s 60,000.&rdquo;
+                </span>
+              </div>
             </div>
 
-            {/* Content Column */}
-            <div className="scenario-panel-content">
-              <div className="scenario-header-meta">
-                <span className="text-[#C5A059] font-mono uppercase text-xs tracking-wider">
-                  Mewar, Rajasthan
-                </span>
-                <span className="scenario-status-tag">Campaign Ready</span>
-              </div>
+            {/* Content & Metadata Column */}
+            <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-[#161412] border-t lg:border-t-0 lg:border-l border-[#2B251D] space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between text-xs text-[#8F8270] font-mono">
+                  <span className="text-[#D1B16A] uppercase font-bold tracking-wider">
+                    Location: Chittorgarh, Mewar
+                  </span>
+                  <span>Duration: 4 Months</span>
+                </div>
 
-              <div className="scenario-title-group">
-                <span className="scenario-caps-label">CHITTORGARH FORTRESS</span>
-                <span className="scenario-date-range">Year 1567&ndash;1568 CE</span>
-                <h2 className="scenario-name">The Defense of Chittor</h2>
-              </div>
+                <div>
+                  <span className="text-xs uppercase tracking-[0.2em] text-[#8F8270] font-semibold block font-mono">
+                    Year 1567&ndash;1568 CE
+                  </span>
+                  <h2 className="font-['Cinzel'] text-2xl sm:text-3xl font-bold text-[#F4E9D0] mt-1 leading-tight">
+                    The Defense of Chittor
+                  </h2>
+                </div>
 
-              <p className="scenario-description">
-                Emperor Akbar has arrived with 60,000 soldiers to conquer Chittor Fort. 
-                Inside the 500-foot rock plateau, 8,000 Rajput defenders and 30,000 citizens are trapped. 
-                As a war council commander, choose how to manage food, cistern water, and counter-attacks.
-              </p>
-
-              <div className="scenario-commanders-list">
-                <span className="commanders-title">Key Leaders in this Battle:</span>
-                <p className="commanders-names">
-                  Rao Jaimal Rathore (Principal Defender) &bull; Rawat Patta (Sortie Commander) &bull; Emperor Akbar (Imperial Besieger)
+                <p className="text-xs sm:text-sm text-[#D8C9AA] leading-relaxed">
+                  Emperor Akbar has invested the mountain fortress of Chittor with 60,000 imperial troops, 
+                  heavy bronze siege guns, and 5,000 sappers building bulletproof covered tunnels (sabats). 
+                  Inside the citadel, commanders Rao Jaimal and Rawat Patta defend 30,000 citizens with 8,000 garrison warriors.
                 </p>
+
+                {/* Key Metrics / Armies */}
+                <div className="grid grid-cols-2 gap-3 py-1 text-xs">
+                  <div className="p-3 bg-[#11110F] border border-[#2B251D]">
+                    <span className="text-[10px] uppercase tracking-wider text-[#B99652] block font-mono font-bold">
+                      Garrison Force
+                    </span>
+                    <strong className="text-sm text-[#F4E9D0]">8,000 Soldiers</strong>
+                    <span className="text-[10px] text-[#8F8270] block mt-0.5">30,000 Civilians</span>
+                  </div>
+
+                  <div className="p-3 bg-[#11110F] border border-[#2B251D]">
+                    <span className="text-[10px] uppercase tracking-wider text-[#B99652] block font-mono font-bold">
+                      Besieging Force
+                    </span>
+                    <strong className="text-sm text-[#F4E9D0]">60,000 Soldiers</strong>
+                    <span className="text-[10px] text-[#8F8270] block mt-0.5">Imperial Artillery</span>
+                  </div>
+                </div>
+
+                {/* Commanders list */}
+                <div className="text-xs pt-2 border-t border-[#2B251D] text-[#8F8270]">
+                  <strong className="text-[#D1B16A] uppercase tracking-wider block mb-1 font-mono text-[10px]">
+                    Archival Characters:
+                  </strong>
+                  <span>Rao Jaimal Rathore &bull; Rawat Patta &bull; Rana Udai Singh II &bull; Emperor Akbar</span>
+                </div>
               </div>
 
-              <div className="scenario-action-box">
+              {/* Enter Scenario Action Button */}
+              <div className="pt-2">
                 <button
-                  className="btn-primary-clean"
+                  type="button"
+                  className="btn-historical-primary w-full text-center py-3.5 text-sm"
                   onClick={nextStage}
                 >
-                  Start This Battle &rarr;
+                  <span>Enter Scenario</span>
+                  <span className="text-[#D1B16A]">&rarr;</span>
                 </button>
               </div>
             </div>
           </div>
         </section>
+
+        {/* Forthcoming Historical Archives (Museum Catalog Previews) */}
+        <section className="space-y-4 pt-6 border-t border-[#2B251D]">
+          <div className="flex items-center justify-between">
+            <h3 className="font-['Cinzel'] text-xl text-[#F4E9D0]">
+              Additional Archival Dossiers
+            </h3>
+            <span className="text-xs text-[#8F8270] font-mono uppercase">
+              Archival Simulations Under Digitization
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Panipat Preview */}
+            <div className="historical-card p-6 opacity-75 hover:opacity-100 transition-opacity">
+              <div className="flex items-center justify-between pb-2 border-b border-[#2B251D]">
+                <span className="text-[11px] font-mono text-[#B99652] uppercase font-bold tracking-wider">
+                  First Battle of Panipat &bull; 1526 CE
+                </span>
+                <span className="text-[10px] px-2 py-0.5 bg-[#11110F] border border-[#2B251D] text-[#8F8270] uppercase font-mono">
+                  Archived Record
+                </span>
+              </div>
+              <h4 className="font-['Cinzel'] text-lg font-bold text-[#F4E9D0] mt-3">
+                Babur vs. Ibrahim Lodi
+              </h4>
+              <p className="text-xs text-[#D8C9AA] leading-relaxed mt-2">
+                Field artillery and the tactical Tulghuma wheeling flank maneuver against the massive Afghan sultanate elephant corps on the northern plains.
+              </p>
+              <div className="mt-4 pt-3 border-t border-[#2B251D] flex items-center justify-between text-xs text-[#8F8270]">
+                <span>Theater: Haryana Plains</span>
+                <span className="text-[#B99652] font-mono text-[11px]">Primary Source: Baburnama</span>
+              </div>
+            </div>
+
+            {/* Haldighati Preview */}
+            <div className="historical-card p-6 opacity-75 hover:opacity-100 transition-opacity">
+              <div className="flex items-center justify-between pb-2 border-b border-[#2B251D]">
+                <span className="text-[11px] font-mono text-[#B99652] uppercase font-bold tracking-wider">
+                  Battle of Haldighati &bull; 1576 CE
+                </span>
+                <span className="text-[10px] px-2 py-0.5 bg-[#11110F] border border-[#2B251D] text-[#8F8270] uppercase font-mono">
+                  Archived Record
+                </span>
+              </div>
+              <h4 className="font-['Cinzel'] text-lg font-bold text-[#F4E9D0] mt-3">
+                Maharana Pratap at the Yellow Pass
+              </h4>
+              <p className="text-xs text-[#D8C9AA] leading-relaxed mt-2">
+                Mountain warfare in the narrow yellow turmeric clay defiles of the Aravalli range against the imperial vanguard led by Man Singh of Amber.
+              </p>
+              <div className="mt-4 pt-3 border-t border-[#2B251D] flex items-center justify-between text-xs text-[#8F8270]">
+                <span>Theater: Khamnore Defile</span>
+                <span className="text-[#B99652] font-mono text-[11px]">Primary Source: Rajprashasti</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Back to Home Action */}
+        <div className="pt-2 flex justify-start">
+          <button
+            type="button"
+            className="btn-historical-secondary text-xs"
+            onClick={() => goToStage('HOME')}
+          >
+            &larr; Back to Introduction
+          </button>
+        </div>
       </main>
     </div>
   );

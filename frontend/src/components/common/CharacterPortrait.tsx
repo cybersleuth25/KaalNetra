@@ -1,11 +1,12 @@
 /**
- * KaalNetra — Character Portrait Component
+ * KaalNetra — Archival Character Portrait Component
  *
- * Immersive historical character presentation:
+ * Implements Section 7 of design specification:
  *   - Guaranteed 3:4 aspect ratio constraint (never stretched)
  *   - Object-fit cover with centered focus
- *   - Antique gold framing, historical vs composite status
- *   - Zero gradients, zero blur overlays, solid borders
+ *   - Antique gold framing, archival corner rivets
+ *   - Historical vs Composite status label
+ *   - Clean archival character record presentation
  */
 
 import { useState } from 'react';
@@ -16,6 +17,7 @@ interface CharacterPortraitProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   showBadge?: boolean;
   showQuote?: boolean;
+  showDetails?: boolean;
   className?: string;
   eager?: boolean;
   onClick?: () => void;
@@ -26,6 +28,7 @@ export default function CharacterPortrait({
   size = 'md',
   showBadge = true,
   showQuote = false,
+  showDetails = false,
   className = '',
   eager = false,
   onClick,
@@ -45,9 +48,9 @@ export default function CharacterPortrait({
       className={`character-portrait-wrapper flex flex-col items-center ${className}`}
       onClick={onClick}
     >
-      {/* Aspect Ratio Box (strictly 3:4) with Antique Gold Trim */}
+      {/* 3:4 Aspect Ratio Archival Frame with Antique Gold Border */}
       <div
-        className={`portrait-frame relative overflow-hidden border border-[#C5A059] bg-[#141720] shadow-md ${sizeClasses}`}
+        className={`archival-portrait-frame relative overflow-hidden ${sizeClasses}`}
         style={{ aspectRatio: '3/4' }}
       >
         {!imgError ? (
@@ -60,36 +63,53 @@ export default function CharacterPortrait({
             className="w-full h-full object-cover object-top"
           />
         ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center p-3 text-center bg-[#0D0F14] text-[#B8B09F]">
-            <span className="text-xs font-serif font-bold text-[#F4EFE6]">{char.name}</span>
+          <div className="w-full h-full flex flex-col items-center justify-center p-3 text-center bg-[#11110F] text-[#8F8270]">
+            <span className="text-xs font-['Cinzel'] font-bold text-[#F4E9D0]">{char.name}</span>
           </div>
         )}
 
-        {/* Historicity Tag (Corner) */}
+        {/* Historicity Tag (Corner Label) */}
         {showBadge && (
-          <div className="absolute top-2 right-2">
+          <div className="absolute top-2 right-2 z-10">
             {char.historical ? (
               <span
-                className="text-[10px] font-bold px-1.5 py-0.5 border border-[#C5A059] bg-[#0D0F14] text-[#DFBE76] font-mono uppercase"
+                className="text-[9px] font-bold px-1.5 py-0.5 border border-[#B99652] bg-[#11110F]/90 text-[#D1B16A] font-mono uppercase tracking-wider"
                 title="Documented Historical Figure"
               >
-                Historical
+                Historical Record
               </span>
             ) : (
               <span
-                className="text-[10px] font-bold px-1.5 py-0.5 border border-[#272E3D] bg-[#0D0F14] text-[#B8B09F] font-mono uppercase"
+                className="text-[9px] font-bold px-1.5 py-0.5 border border-[#2B251D] bg-[#11110F]/90 text-[#8F8270] font-mono uppercase tracking-wider"
                 title="Fictional Composite Character"
               >
-                Composite
+                Composite Character
               </span>
             )}
           </div>
         )}
       </div>
 
-      {/* Optional Quote / Name Below Frame */}
+      {/* Optional Details below Portrait */}
+      {showDetails && (
+        <div className="mt-3 text-center space-y-1">
+          <h4 className="font-['Cinzel'] font-bold text-base text-[#F4E9D0] leading-snug">
+            {char.name}
+          </h4>
+          <span className="text-xs uppercase tracking-wider text-[#D1B16A] font-medium block">
+            {char.title}
+          </span>
+          {char.historical && (
+            <span className="text-[10px] text-[#8F8270] font-mono block">
+              Documented Record
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* Optional Spoken Quote */}
       {showQuote && char.quote && (
-        <blockquote className="mt-2 text-xs italic text-[#DFBE76] text-center max-w-xs leading-snug font-serif">
+        <blockquote className="mt-2 text-xs italic text-[#D1B16A] text-center max-w-xs leading-relaxed font-['Cormorant_Garamond']">
           &ldquo;{char.quote}&rdquo;
         </blockquote>
       )}

@@ -1,13 +1,12 @@
 /**
  * KaalNetra — War Council Briefing Screen
  *
- * Immersive historical war council briefing.
- * Shows:
- *   - Rich StateHUD status console
- *   - Interactive advisor selection with authentic spoken dialogue
- *   - 4 Clear battle constraints (Battle Rules)
- *   - Clear call to action to proceed to Decision 1
- * Dark fortress aesthetic, antique gold trims, zero gradients.
+ * Immersive historical war council inside the Chittor citadel.
+ * Features:
+ *   - Fort Defense Status Console (StateHUD)
+ *   - Interactive advisor selection with authentic spoken dialogue & strategy
+ *   - The 4 Battle Rules (Historical Constraints)
+ *   - Command-room aesthetic with dark charcoal surfaces, antique gold framing, and parchment dispatches
  */
 
 import { useState } from 'react';
@@ -55,15 +54,15 @@ export default function BriefingScreen() {
     <div className="app-page-clean">
       <GameHeader badge="historical" />
 
-      <main className="clean-container py-8 sm:py-10 space-y-8">
+      <main className="clean-container py-8 sm:py-12 space-y-8">
         {/* Council Header */}
-        <header className="pb-4 border-b border-[#272E3D]">
-          <div className="text-kicker">War Council Meeting</div>
-          <h1 className="serif-heading text-3xl sm:text-4xl text-[#F4EFE6] mt-1">
-            Meet Your Defense Team
+        <header className="pb-4 border-b border-[#2B251D]">
+          <div className="text-kicker">Citadel Command Chamber</div>
+          <h1 className="serif-heading text-3xl sm:text-4xl text-[#F4E9D0] mt-1">
+            War Council Briefing
           </h1>
-          <p className="text-[#B8B09F] text-sm mt-1">
-            Inside the Chittor Citadel &bull; Hear counsel from your chieftains before issuing your first decrees
+          <p className="text-xs sm:text-sm text-[#8F8270] mt-1 font-mono">
+            October 1567 &bull; Inside Chittorgarh Citadel &bull; Receive strategic counsel before issuing decrees
           </p>
         </header>
 
@@ -72,10 +71,10 @@ export default function BriefingScreen() {
           <StateHUD state={session.currentState} />
         </section>
 
-        {/* 2-Column Council Layout */}
+        {/* 2-Column War Council Layout */}
         <div className="layout-sidebar-grid">
           {/* Left Column: Portrait & Advisor Selection */}
-          <div className="bg-[#141720] border border-[#272E3D] p-6 shadow-md space-y-5">
+          <div className="historical-card p-6 corner-ornament space-y-5">
             <div className="flex flex-col items-center text-center">
               <CharacterPortrait
                 characterIdOrKey={activeAdvisor}
@@ -83,142 +82,153 @@ export default function BriefingScreen() {
                 showBadge={true}
                 eager={true}
               />
-              <h3 className="serif-title text-xl text-[#F4EFE6] mt-4">
+              <h3 className="font-['Cinzel'] text-xl font-bold text-[#F4E9D0] mt-4">
                 {currentAdvisor.name}
               </h3>
-              <span className="text-xs text-[#DFBE76] font-semibold uppercase tracking-wider mt-0.5 font-mono">
+              <span className="text-xs text-[#D1B16A] font-semibold uppercase tracking-wider font-mono mt-0.5">
                 {currentAdvisor.title}
               </span>
             </div>
 
             {/* Advisor Selector Buttons */}
-            <div className="space-y-2 pt-4 border-t border-[#272E3D]">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#C5A059] block mb-2 font-mono">
-                Click to Hear Their Strategy:
+            <div className="space-y-2 pt-4 border-t border-[#2B251D]">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#B99652] block mb-2 font-mono">
+                Consult Council Members:
               </span>
+
               <button
-                className={`w-full text-left text-xs p-3 border transition-colors ${
+                type="button"
+                className={`w-full text-left text-xs p-3.5 border transition-all ${
                   activeAdvisor === 'jaimal'
-                    ? 'border-[#C5A059] bg-[#1B202B] text-[#F4EFE6] font-bold'
-                    : 'border-[#272E3D] bg-[#0D0F14] text-[#B8B09F] hover:bg-[#1B202B]'
+                    ? 'border-[#B99652] bg-[#1F1C16] text-[#F4E9D0] font-bold shadow-[0_0_10px_rgba(209,177,106,0.15)]'
+                    : 'border-[#2B251D] bg-[#11110F] text-[#8F8270] hover:bg-[#1A1815] hover:text-[#D8C9AA]'
                 }`}
                 onClick={() => setActiveAdvisor('jaimal')}
               >
-                <div className="font-bold text-sm text-[#F4EFE6]">Rao Jaimal Rathore</div>
-                <div className="text-xs text-[#DFBE76] mt-0.5">Focus: Guard the Walls &amp; Ramparts</div>
+                <div className="font-['Cinzel'] font-bold text-sm text-[#F4E9D0]">Rao Jaimal Rathore</div>
+                <div className="text-xs text-[#D1B16A] mt-0.5 font-mono">Focus: Rampart Vigilance &amp; Stone Repair</div>
               </button>
 
               <button
-                className={`w-full text-left text-xs p-3 border transition-colors ${
+                type="button"
+                className={`w-full text-left text-xs p-3.5 border transition-all ${
                   activeAdvisor === 'patta'
-                    ? 'border-[#C5A059] bg-[#1B202B] text-[#F4EFE6] font-bold'
-                    : 'border-[#272E3D] bg-[#0D0F14] text-[#B8B09F] hover:bg-[#1B202B]'
+                    ? 'border-[#B99652] bg-[#1F1C16] text-[#F4E9D0] font-bold shadow-[0_0_10px_rgba(209,177,106,0.15)]'
+                    : 'border-[#2B251D] bg-[#11110F] text-[#8F8270] hover:bg-[#1A1815] hover:text-[#D8C9AA]'
                 }`}
                 onClick={() => setActiveAdvisor('patta')}
               >
-                <div className="font-bold text-sm text-[#F4EFE6]">Rawat Patta Chundawat</div>
-                <div className="text-xs text-[#DFBE76] mt-0.5">Focus: Night Surprise Sorties Outside</div>
+                <div className="font-['Cinzel'] font-bold text-sm text-[#F4E9D0]">Rawat Patta Chundawat</div>
+                <div className="text-xs text-[#D1B16A] mt-0.5 font-mono">Focus: Midnight Sorties &amp; Burning Sabats</div>
               </button>
 
               <button
-                className={`w-full text-left text-xs p-3 border transition-colors ${
+                type="button"
+                className={`w-full text-left text-xs p-3.5 border transition-all ${
                   activeAdvisor === 'resource_steward'
-                    ? 'border-[#C5A059] bg-[#1B202B] text-[#F4EFE6] font-bold'
-                    : 'border-[#272E3D] bg-[#0D0F14] text-[#B8B09F] hover:bg-[#1B202B]'
+                    ? 'border-[#B99652] bg-[#1F1C16] text-[#F4E9D0] font-bold shadow-[0_0_10px_rgba(209,177,106,0.15)]'
+                    : 'border-[#2B251D] bg-[#11110F] text-[#8F8270] hover:bg-[#1A1815] hover:text-[#D8C9AA]'
                 }`}
                 onClick={() => setActiveAdvisor('resource_steward')}
               >
-                <div className="font-bold text-sm text-[#F4EFE6]">Food &amp; Water Steward</div>
-                <div className="text-xs text-[#DFBE76] mt-0.5">Focus: Conserve Grain &amp; Rainwater</div>
+                <div className="font-['Cinzel'] font-bold text-sm text-[#F4E9D0]">Food &amp; Water Steward</div>
+                <div className="text-xs text-[#D1B16A] mt-0.5 font-mono">Focus: Granaries &amp; Gaumukh Reservoirs</div>
               </button>
             </div>
           </div>
 
-          {/* Right Column: Commander's Spoken Advice & 4 Rules */}
+          {/* Right Column: Commander's Spoken Advice & 4 Battle Rules */}
           <div className="space-y-6">
-            {/* Dialogue Card */}
-            <div className="bg-[#141720] border border-[#272E3D] p-6 shadow-md space-y-4">
-              <div className="flex items-center justify-between pb-2 border-b border-[#272E3D]">
-                <span className="text-xs uppercase tracking-wider font-bold text-[#C5A059]">
-                  Commander&apos;s Advice &bull; Spoken Strategy
+            {/* Spoken Advice Parchment Card */}
+            <div className="parchment-panel p-6 corner-ornament space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-[#A38C65]/50">
+                <span className="parchment-meta">
+                  Spoken War Counsel &bull; Council Chamber
                 </span>
-                <span className="text-xs text-[#788194] italic font-mono">Council Chamber</span>
+                <span className="text-xs font-mono text-[#54493B]">Oral Record</span>
               </div>
 
-              <h2 className="serif-title text-2xl text-[#F4EFE6]">
-                {currentAdvisor.name} says:
+              <h2 className="parchment-title text-2xl text-[#29231B]">
+                {currentAdvisor.name} directs:
               </h2>
 
-              <p className="text-base text-[#F4EFE6] leading-relaxed italic border-l-4 border-l-[#C5A059] pl-4 py-2 bg-[#0D0F14]">
+              <blockquote className="parchment-body text-base italic p-4 bg-[#F2E5C5] border-l-4 border-l-[#B99652] my-2">
                 &ldquo;{advisorSpeech.advice}&rdquo;
-              </p>
+              </blockquote>
 
-              <div className="p-3 bg-[#1B202B] border border-[#272E3D] text-xs text-[#DFBE76] font-medium">
-                <strong className="text-[#F4EFE6]">Tactical Takeaway:</strong> {advisorSpeech.recommendation}
+              <div className="p-3 bg-[#E0CEA4] border border-[#A38C65] text-xs font-medium text-[#29231B]">
+                <strong className="font-['Cinzel'] font-bold uppercase text-[11px] block mb-0.5">
+                  Tactical Recommendation:
+                </strong>
+                {advisorSpeech.recommendation}
               </div>
             </div>
 
             {/* Documented Operational Constraints (4 Battle Rules) */}
-            <div className="bg-[#141720] border border-[#272E3D] p-6 shadow-md space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xs uppercase tracking-wider font-bold text-[#C5A059] font-mono">
-                  4 Battle Rules You Must Remember
+            <div className="historical-card p-6 corner-ornament space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-[#2B251D]">
+                <h3 className="text-xs uppercase tracking-wider font-bold text-[#D1B16A] font-mono">
+                  The Four Iron Realities of Chittor
                 </h3>
-                <span className="text-xs text-[#788194]">Historical Reality</span>
+                <span className="text-xs text-[#8F8270] font-mono">Historical Constraints</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-[#B8B09F] leading-relaxed">
-                <div className="p-3.5 bg-[#0D0F14] border border-[#272E3D]">
-                  <div className="font-bold text-sm text-[#F4EFE6] mb-1 flex items-center gap-1.5">
-                    <span>🏔️</span> 1. No Outside Rescue
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-[#D8C9AA] leading-relaxed">
+                <div className="p-3.5 bg-[#11110F] border border-[#2B251D] space-y-1">
+                  <div className="font-['Cinzel'] font-bold text-sm text-[#F4E9D0] flex items-center gap-2">
+                    <span className="text-[#B99652]">I.</span> No Relief Army
                   </div>
                   <p>
-                    King Udai Singh is in the hills preserving the dynasty. You are completely on your own; no relief army is coming to break the siege.
+                    King Udai Singh fights in the hills to save the dynasty. No reinforcements are marching to break the siege.
                   </p>
                 </div>
 
-                <div className="p-3.5 bg-[#0D0F14] border border-[#272E3D]">
-                  <div className="font-bold text-sm text-[#F4EFE6] mb-1 flex items-center gap-1.5">
-                    <span>⛏️</span> 2. Enemy Diggers (Sabats)
+                <div className="p-3.5 bg-[#11110F] border border-[#2B251D] space-y-1">
+                  <div className="font-['Cinzel'] font-bold text-sm text-[#F4E9D0] flex items-center gap-2">
+                    <span className="text-[#B99652]">II.</span> Covered Sabats
                   </div>
                   <p>
-                    5,000 imperial sappers are building giant wooden tunnels creeping up the slope to dig gunpowder mines under your stone walls.
+                    5,000 imperial diggers are erecting bulletproof wooden galleries to dig gunpowder mines under the walls.
                   </p>
                 </div>
 
-                <div className="p-3.5 bg-[#0D0F14] border border-[#272E3D]">
-                  <div className="font-bold text-sm text-[#F4EFE6] mb-1 flex items-center gap-1.5">
-                    <span>⚔️</span> 3. Irreplaceable 8,000 Men
+                <div className="p-3.5 bg-[#11110F] border border-[#2B251D] space-y-1">
+                  <div className="font-['Cinzel'] font-bold text-sm text-[#F4E9D0] flex items-center gap-2">
+                    <span className="text-[#B99652]">III.</span> Irreplaceable 8,000
                   </div>
                   <p>
-                    You have exactly 8,000 veteran defenders. Because the fort is encircled, lost soldiers cannot be replaced.
+                    You have exactly 8,000 veteran defenders. Because the fort is surrounded, lost warriors cannot be replaced.
                   </p>
                 </div>
 
-                <div className="p-3.5 bg-[#0D0F14] border border-[#272E3D]">
-                  <div className="font-bold text-sm text-[#F4EFE6] mb-1 flex items-center gap-1.5">
-                    <span>🌾</span> 4. 30,000 Ordinary People
+                <div className="p-3.5 bg-[#11110F] border border-[#2B251D] space-y-1">
+                  <div className="font-['Cinzel'] font-bold text-sm text-[#F4E9D0] flex items-center gap-2">
+                    <span className="text-[#B99652]">IV.</span> 30,000 Civilians
                   </div>
                   <p>
-                    Thousands of villagers took shelter inside. You must manage grain and rainwater tanks carefully or starvation will defeat you.
+                    Tens of thousands took refuge within the gates. Grain and rainwater must be conserved or famine will prevail.
                   </p>
                 </div>
               </div>
             </div>
 
             {/* Navigation Actions */}
-            <div className="pt-2 flex items-center justify-between">
+            <div className="pt-2 flex flex-wrap items-center justify-between gap-4">
               <button
-                className="btn-secondary-clean"
+                type="button"
+                className="btn-historical-secondary text-xs py-2.5 px-5"
                 onClick={prevStage}
               >
-                &larr; Story Background
+                &larr; Historical Context
               </button>
+
               <button
-                className="btn-primary-clean text-base py-3 px-8"
+                type="button"
+                className="btn-historical-primary text-sm py-3 px-8"
                 onClick={nextStage}
               >
-                Give Your First Orders &rarr;
+                <span>Issue First Directives</span>
+                <span className="text-[#D1B16A]">&rarr;</span>
               </button>
             </div>
           </div>

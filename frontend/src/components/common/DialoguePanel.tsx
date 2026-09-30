@@ -6,7 +6,7 @@
  *   - Speaker name, role, and historical context
  *   - Dialogue in clean typography with gold quote bar
  *   - Simple solid tab buttons to cycle between advisers
- *   - Zero gradients, zero glassmorphism, solid palette
+ *   - Dark charcoal surfaces, antique gold framing
  */
 
 import { useState } from 'react';
@@ -40,10 +40,10 @@ export default function DialoguePanel({
   const char = getCharacterAsset(currentEntry.characterId);
 
   return (
-    <div className={`bg-[#141720] border border-[#272E3D] p-4 shadow-md ${className}`}>
+    <div className={`historical-card p-4 sm:p-5 corner-ornament ${className}`}>
       {/* Header with Title and Adviser Tabs */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#272E3D] pb-2 mb-3">
-        <div className="text-xs uppercase tracking-wider font-bold text-[#C5A059] font-mono">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#2B251D] pb-2 mb-3">
+        <div className="text-xs uppercase tracking-wider font-bold text-[#D1B16A] font-mono">
           {title}
         </div>
 
@@ -60,8 +60,8 @@ export default function DialoguePanel({
                   onClick={() => setActiveIndex(idx)}
                   className={`text-xs px-2.5 py-1 border transition-colors ${
                     isActive
-                      ? 'border-[#C5A059] bg-[#9E2A2B] text-[#F4EFE6] font-bold'
-                      : 'border-[#272E3D] bg-[#0D0F14] text-[#B8B09F] hover:bg-[#1B202B]'
+                      ? 'border-[#B99652] bg-[#1F1C16] text-[#D1B16A] font-bold'
+                      : 'border-[#2B251D] bg-[#11110F] text-[#8F8270] hover:text-[#D8C9AA]'
                   }`}
                 >
                   {speakerChar.name.split(' ')[0]}
@@ -87,29 +87,29 @@ export default function DialoguePanel({
         <div className="flex-1 flex flex-col justify-between self-stretch text-left">
           <div>
             <div className="flex flex-wrap items-baseline gap-2 mb-1">
-              <span className="serif-title font-bold text-[#F4EFE6] text-base">
+              <span className="font-['Cinzel'] font-bold text-[#F4E9D0] text-base">
                 {currentEntry.speakerName || char.name}
               </span>
-              <span className="text-xs text-[#B8B09F]">
+              <span className="text-xs text-[#8F8270] font-mono">
                 &mdash; {currentEntry.title || char.role}
               </span>
             </div>
 
             {currentEntry.perspectiveTag && (
-              <span className="inline-block text-[10px] uppercase tracking-wider font-semibold text-[#DFBE76] bg-[#0D0F14] border border-[#272E3D] px-2 py-0.5 mb-2 font-mono">
+              <span className="inline-block text-[10px] uppercase tracking-wider font-semibold text-[#D1B16A] bg-[#11110F] border border-[#2B251D] px-2 py-0.5 mb-2 font-mono">
                 {currentEntry.perspectiveTag}
               </span>
             )}
 
-            <div className="pl-3 border-l-2 border-[#C5A059] my-1 bg-[#0D0F14] p-2">
-              <p className="text-sm text-[#F4EFE6] italic leading-relaxed font-serif">
+            <div className="pl-3 border-l-2 border-l-[#B99652] my-1 bg-[#11110F] p-3">
+              <p className="text-sm text-[#D8C9AA] italic leading-relaxed font-['Cormorant_Garamond']">
                 &ldquo;{currentEntry.text}&rdquo;
               </p>
             </div>
           </div>
 
           {/* Character Sub-note */}
-          <div className="mt-3 pt-2 border-t border-[#272E3D] text-xs text-[#788194] flex items-center justify-between font-mono">
+          <div className="mt-3 pt-2 border-t border-[#2B251D] text-[11px] text-[#8F8270] flex items-center justify-between font-mono">
             <span>
               {char.historical
                 ? 'Documented in primary chronicles (Akbarnama, Badauni)'

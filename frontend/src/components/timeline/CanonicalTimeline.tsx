@@ -1,10 +1,12 @@
 /**
  * KaalNetra — Canonical Historical Timeline
  *
- * Renders the immutable, documented sequence of historical events.
- * Clearly labeled: "Documented History"
- * Primary and scholarly source attributed.
- * Antique Rajput Gold framing, dark basalt background, zero gradients.
+ * Implements Right Pane of Section 10:
+ *   - Aged parchment aesthetic
+ *   - Dark ink typography (#29231B)
+ *   - Warm gold accents
+ *   - Clearly labeled: "DOCUMENTED HISTORY — Immutable Record"
+ *   - "Historical records show..."
  */
 
 import type { CanonicalTimelineEvent, EvidenceEntry } from '../../data/types';
@@ -27,41 +29,55 @@ export default function CanonicalTimeline({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between pb-3 border-b border-[#272E3D]">
-        <div className="flex items-center gap-2">
-          <span className="text-xs uppercase tracking-wider font-bold text-[#DFBE76] font-mono">
-            Documented History
+      <div className="flex items-center justify-between pb-3 border-b border-[#A38C65]/50">
+        <div>
+          <span className="text-[11px] uppercase tracking-wider font-bold text-[#54493B] font-mono block">
+            Archival Record
           </span>
-          <span className="text-xs text-[#B8B09F]">({timeline.length} Historical Epochs)</span>
+          <span className="text-xs text-[#54493B] font-mono">
+            {timeline.length} Documented Historical Epochs
+          </span>
         </div>
-        <span className="text-xs text-[#C5A059] font-mono uppercase">Immutable Canon</span>
+        <span className="text-[10px] text-[#29231B] bg-[#E0CEA4] border border-[#A38C65] px-2 py-0.5 font-mono uppercase font-bold tracking-wider">
+          Immutable Canon
+        </span>
       </div>
 
       <div className="space-y-6">
         {timeline.map((event, idx) => {
           return (
-            <div key={event.id} className="bg-[#141720] border border-[#C5A059] p-5 space-y-3 shadow-md">
-              <div className="flex items-center justify-between pb-2 border-b border-[#272E3D]">
-                <span className="text-xs font-bold text-[#DFBE76] font-mono uppercase">
+            <div
+              key={event.id}
+              className="bg-[#F2E5C5] border border-[#A38C65] p-5 space-y-3 shadow-md corner-ornament"
+            >
+              <div className="flex items-center justify-between pb-2 border-b border-[#A38C65]/50">
+                <span className="text-xs font-bold text-[#29231B] font-mono uppercase">
                   Phase {idx + 1} &bull; {event.date_label}
                 </span>
-                <span className="text-xs font-semibold px-2 py-0.5 bg-[#0D0F14] border border-[#272E3D] text-[#B8B09F] font-mono">
+                <span className="text-[10px] font-semibold px-2 py-0.5 bg-[#E8D7B3] border border-[#A38C65] text-[#29231B] font-mono">
                   {event.evidence_level}
                 </span>
               </div>
 
-              <h4 className="serif-title text-lg text-[#F4EFE6]">
+              <h4 className="font-['Cinzel'] text-lg font-bold text-[#29231B]">
                 {event.title}
               </h4>
 
-              <p className="text-sm text-[#B8B09F] leading-relaxed">
-                {event.description}
-              </p>
+              <div className="space-y-1">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#54493B] block">
+                  Documented History:
+                </span>
+                <p className="font-['Cormorant_Garamond'] text-base text-[#29231B] leading-relaxed">
+                  &ldquo;Historical records show {event.description.charAt(0).toLowerCase() + event.description.slice(1)}&rdquo;
+                </p>
+              </div>
 
-              {/* Source Attribution */}
+              {/* Source Attribution Chips */}
               {event.source_ids && event.source_ids.length > 0 && (
-                <div className="pt-2 border-t border-[#272E3D] flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-semibold text-[#DFBE76]">Sources:</span>
+                <div className="pt-2 border-t border-[#A38C65]/40 flex flex-wrap items-center gap-2">
+                  <span className="text-[10px] font-mono font-bold uppercase text-[#54493B]">
+                    Primary Chronicles:
+                  </span>
                   {event.source_ids.map((srcId: string) => {
                     const meta = evidenceMap.get(srcId);
                     return (
@@ -69,7 +85,7 @@ export default function CanonicalTimeline({
                         key={srcId}
                         type="button"
                         onClick={() => onSelectEvidence && onSelectEvidence(srcId)}
-                        className="text-xs px-2 py-0.5 bg-[#0D0F14] border border-[#272E3D] text-[#DFBE76] hover:border-[#C5A059] transition-colors"
+                        className="text-xs px-2 py-0.5 bg-[#E8D7B3] border border-[#A38C65] text-[#29231B] hover:border-[#29231B] font-mono transition-colors"
                         title={meta ? `${meta.source} (${meta.type})` : srcId}
                       >
                         {meta ? meta.source.split(',')[0] : srcId}
